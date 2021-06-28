@@ -1,2 +1,2 @@
 # PonyGalaMobile
-A mobile client of my ponygala project for android
+This repo is an attempt to combine all my knowledge about the web apps and android mobile apps, to create a simple native client for my ponygala project.

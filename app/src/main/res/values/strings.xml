@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">ArtGala</string>
-    <string name="hello_world">Hello, my long way build! In some time there will be something.. </string>
+    <string name="title">Big DigitalArt Gallery</string>
+    <string name="subtitle">for everyone, who likes quality arts of fandoms</string>
 
 </resources>

@@ -91,3 +91,8 @@ lint/tmp/
 
 # Android Profiling
 *.hprof
+
+/.idea/
+/gradle/wrapper/
+/gradlew
+/gradlew.bat

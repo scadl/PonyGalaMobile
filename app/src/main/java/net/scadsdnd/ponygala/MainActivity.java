@@ -8,7 +8,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import net.scadsdnd.ponygala.WebRequest;
+
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends Activity 
 {
@@ -29,13 +34,11 @@ public class MainActivity extends Activity
         SharedPreferences shPrf = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
         isAdmin = shPrf.getBoolean("admin_mode", false);
 
-        catList = (ListView) findViewById(R.id.catListView);
-        catList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("UI", "Cat List click");
-            }
-        });
+        WebRequest wr1 = new WebRequest();
+        wr1.UIContext = this;
+        wr1.OutputView = (ListView) findViewById(R.id.catListView);
+        wr1.execute("act=1");
+
     }
 
     @Override

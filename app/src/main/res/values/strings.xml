@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ArtGala</string>
-    <string name="title">Big DigitalArt Gallery</string>
+    <string name="app_name">Big DigitalArt Gallery</string>
     <string name="subtitle">for everyone, who likes quality arts of fandoms</string>
 
 </resources>

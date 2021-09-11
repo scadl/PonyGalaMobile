@@ -1,18 +1,14 @@
 package net.scadsdnd.ponygala;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -26,12 +22,35 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+// Simple AsynctTask (other thread)
 // https://developer.android.com/reference/android/os/AsyncTask
-public class WebRequest extends AsyncTask<String,String,String> {
+public class WebRequest extends AsyncTask<Integer,String,Integer> {
+
+    // Java callback registration
+    // https://www.fandroid.info/urok-13-osnovy-java-metody-obratnogo-vyzova-callback/
+
+    interface callBackInterface {
+        void pCategoryList(JSONArray jArr);
+        void pArtList(JSONArray jArr);
+    }
+
+    private callBackInterface CBVar;
+
+    public void regCb(callBackInterface CBVarIn){
+        this.CBVar = CBVarIn;
+    }
+
+    // Callback reg end
 
     private String out;
-    public ListView OutputView;
+    private String[] catNames;
     public Context UIContext;
+    public TextView StatusUI;
+
+    // Basic getter (returns class val)
+    public String[] getCats(){
+        return  catNames;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -39,7 +58,7 @@ public class WebRequest extends AsyncTask<String,String,String> {
     }
 
     @Override
-    protected String doInBackground(String... inParams) {
+    protected Integer doInBackground(Integer... inParams) {
 
         //Android 6.0 release removes support for the Apache HTTP client.
         // If your app is using this client and targets Android 2.3 (API level 9) or higher, use the HttpURLConnection class instead.
@@ -50,7 +69,7 @@ public class WebRequest extends AsyncTask<String,String,String> {
         publishProgress("Building request");
 
         try {
-            youServ = new URL("https://artgala.scadsdnd.net/mods/api.php?"+inParams[0]);
+            youServ = new URL("https://artgala.scadsdnd.net/mods/api.php?act="+inParams[0]);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             publishProgress(e.getLocalizedMessage());
@@ -95,53 +114,46 @@ public class WebRequest extends AsyncTask<String,String,String> {
             urlConn.disconnect();
         }
 
-
-        return null;
+        return inParams[0];
     }
 
     @Override
     protected void onProgressUpdate(String... values) {
-        //StatusUI.setText(values[0]);
-        Toast.makeText(UIContext, values[0], Toast.LENGTH_SHORT/2).show();
+        StatusUI.setText(values[0]);
+        //Toast.makeText(UIContext, values[0], Toast.LENGTH_SHORT/2).show();
         super.onProgressUpdate(values);
     }
 
+    @SuppressLint("WrongThread")
     @Override
-    protected void onPostExecute(String unused) {
+    protected void onPostExecute(Integer act) {
         Log.v("LOG", out);
         try {
 
             JSONArray jRows = new JSONArray(out);
-            final String[] catID = new String[jRows.length()];
-            String[] catName = new String[jRows.length()];
 
             Log.v("JSON", Integer.toString(jRows.length()));
 
-            JSONObject jData = null;
-            for (int i=0; i < jRows.length(); i++){
-                jData = jRows.getJSONObject(i);
-                catID[i] = jData.getString("cat_id");
-                catName[i] = jData.getString("cat_name");
-
-                //Log.v("JSON", jData.getString("cat_name"));
+            switch (act){
+                case 1:
+                    CBVar.pCategoryList(jRows);
+                    break;
+                case 2:
+                    CBVar.pArtList(jRows);
+                    break;
+                default:
+                        Log.v("!SRV", "Unknown api req");
+                        publishProgress("Unknown api req");
+                   break;
             }
 
-            // https://developer.android.com/reference/android/widget/ListView
-            ArrayAdapter<String> myAdapt = new ArrayAdapter<String>(UIContext, android.R.layout.simple_list_item_1, catName);
-            OutputView.setAdapter(myAdapt);
 
-            OutputView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(UIContext, "db_Pos:" + catID[position], Toast.LENGTH_SHORT).show();
-                }
-            });
 
         } catch (JSONException e) {
             e.printStackTrace();
             publishProgress(e.getLocalizedMessage());
         }
 
-        super.onPostExecute(unused);
+        super.onPostExecute(act);
     }
 }

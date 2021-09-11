@@ -7,13 +7,10 @@ import android.os.*;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import net.scadsdnd.ponygala.WebRequest;
-
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends Activity 
 {
@@ -34,10 +31,21 @@ public class MainActivity extends Activity
         SharedPreferences shPrf = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
         isAdmin = shPrf.getBoolean("admin_mode", false);
 
-        WebRequest wr1 = new WebRequest();
-        wr1.UIContext = this;
-        wr1.OutputView = (ListView) findViewById(R.id.catListView);
-        wr1.execute("act=1");
+        WebRequest catWebRq = new WebRequest();
+        webProcessor catWebProc = new webProcessor();
+
+        catWebRq.UIContext = this;
+        catWebRq.regCb(catWebProc);
+        catWebRq.StatusUI = (TextView) findViewById(R.id.subtitle);
+
+        catWebProc.UIContext = this;
+        catWebProc.OutputView = (ListView) findViewById(R.id.catListView);
+
+
+        catWebRq.execute(1);
+
+        String[] myCats = catWebRq.getCats();
+
 
     }
 
@@ -60,4 +68,6 @@ public class MainActivity extends Activity
         }
 
     }
+
+
 }

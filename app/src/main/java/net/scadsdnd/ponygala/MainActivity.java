@@ -41,11 +41,7 @@ public class MainActivity extends Activity
         catWebProc.UIContext = this;
         catWebProc.OutputView = (ListView) findViewById(R.id.catListView);
 
-
         catWebRq.execute(1);
-
-        String[] myCats = catWebRq.getCats();
-
 
     }
 

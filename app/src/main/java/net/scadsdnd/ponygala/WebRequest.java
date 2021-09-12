@@ -43,14 +43,8 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
     // Callback reg end
 
     private String out;
-    private String[] catNames;
     public Context UIContext;
     public TextView StatusUI;
-
-    // Basic getter (returns class val)
-    public String[] getCats(){
-        return  catNames;
-    }
 
     @Override
     protected void onPreExecute() {

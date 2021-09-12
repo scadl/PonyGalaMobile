@@ -12,7 +12,7 @@
         android:resizeableActivity="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".GallaryActivity"
+            android:name=".GalleryActivity"
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

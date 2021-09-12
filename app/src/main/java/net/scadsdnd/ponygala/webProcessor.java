@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class webProcessor implements WebRequest.callBackInterface {
 
         final String[] catID = new String[jRows.length()];
         String[] catName = new String[jRows.length()];
+        String[] catCounts = new String[jRows.length()];
         JSONObject jData = null;
 
         try {
@@ -34,6 +36,7 @@ public class webProcessor implements WebRequest.callBackInterface {
                 jData = jRows.getJSONObject(i);
                 catID[i] = jData.getString("cat_id");
                 catName[i] = jData.getString("cat_name");
+                catCounts[i] = jData.getString("count");
 
                 //Log.v("JSON", jData.getString("cat_name"));
             }
@@ -42,8 +45,11 @@ public class webProcessor implements WebRequest.callBackInterface {
         }
 
         // https://developer.android.com/reference/android/widget/ListView
-        ArrayAdapter<String> myAdapt = new ArrayAdapter<String>(UIContext, android.R.layout.simple_list_item_1, catName);
-        OutputView.setAdapter(myAdapt);
+        //ArrayAdapter<String> myAdapt = new ArrayAdapter<String>(UIContext, android.R.layout.simple_list_item_1, catName);
+        //OutputView.setAdapter(myAdapt);
+
+        ListAdapter listAdapter = new CatAdapter(UIContext, catName, catCounts);
+        OutputView.setAdapter(listAdapter);
 
         OutputView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -53,7 +59,7 @@ public class webProcessor implements WebRequest.callBackInterface {
 
                 // Creating new activity on click
                 // https://developer.android.com/training/basics/firstapp/starting-activity#java
-                Intent intGala = new Intent(UIContext, GallaryActivity.class);
+                Intent intGala = new Intent(UIContext, GalleryActivity.class);
                 intGala.putExtra("catId", catID[position]);
                 UIContext.startActivity(intGala);
 

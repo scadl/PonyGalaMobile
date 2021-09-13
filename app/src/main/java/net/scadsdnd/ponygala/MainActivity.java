@@ -5,10 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.*;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +13,6 @@ public class MainActivity extends Activity
 
     Integer lvl = 0;
     Boolean isAdmin = false;
-    ListView catList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -32,14 +27,14 @@ public class MainActivity extends Activity
         isAdmin = shPrf.getBoolean("admin_mode", false);
 
         WebRequest catWebRq = new WebRequest();
-        webProcessor catWebProc = new webProcessor();
+        WebProcessor catWebProc = new WebProcessor();
 
         catWebRq.UIContext = this;
         catWebRq.regCb(catWebProc);
         catWebRq.StatusUI = (TextView) findViewById(R.id.subtitle);
 
         catWebProc.UIContext = this;
-        catWebProc.OutputView = (ListView) findViewById(R.id.catListView);
+        catWebProc.OutputView = findViewById(R.id.catListView);
 
         catWebRq.execute(1);
 

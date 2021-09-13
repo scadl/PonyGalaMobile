@@ -59,11 +59,20 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
         // https://developer.android.com/about/versions/marshmallow/android-6.0-changes
 
         URL youServ = null;
+        String getParams = null;
 
         publishProgress("Building request");
 
         try {
-            youServ = new URL("https://artgala.scadsdnd.net/mods/api.php?act="+inParams[0]);
+            switch (inParams[0]){
+                case 1:
+                    getParams = "act="+inParams[0];
+                    break;
+                case 2:
+                    getParams = "act="+inParams[0]+"&cat_id="+inParams[1];
+                    break;
+            }
+            youServ = new URL("https://artgala.scadsdnd.net/mods/api.php?"+getParams);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             publishProgress(e.getLocalizedMessage());
@@ -89,7 +98,6 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
 
         try{
             InputStream inS = new BufferedInputStream(urlConn.getInputStream());
-
             BufferedReader myBuffRead = new BufferedReader(new InputStreamReader(inS, "UTF-8"), 8);
             StringBuilder myStrBuild = new StringBuilder();
             myStrBuild.append(myBuffRead.readLine()+"\n");
@@ -97,8 +105,7 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
             out = myStrBuild.toString();
 
             publishProgress("Data loaded");
-
-
+            inS.close();
 
             //readStream(inS)
         } catch (IOException e) {

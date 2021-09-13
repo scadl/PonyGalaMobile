@@ -1,18 +1,31 @@
 package net.scadsdnd.ponygala;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class GalleryActivity extends AppCompatActivity {
+public class GalleryActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery);
 
-        TextView tv = (TextView) findViewById(R.id.textView);
+        WebRequest artWebRq = new WebRequest();
+        WebProcessor artsWebProc = new WebProcessor();
+
+        artWebRq.UIContext = this;
+        artWebRq.regCb(artsWebProc);
+        artWebRq.StatusUI = (TextView) findViewById(R.id.tvStatus);
+
+        artsWebProc.UIContext = this;
+        artsWebProc.OutputView = findViewById(R.id.gvArts);
+
+        artWebRq.execute(2, Integer.parseInt(getIntent().getStringExtra("catId")));
+
+        TextView tv = (TextView) findViewById(R.id.tvStatus);
         tv.setText(getIntent().getStringExtra("catId"));
+
+
     }
 }

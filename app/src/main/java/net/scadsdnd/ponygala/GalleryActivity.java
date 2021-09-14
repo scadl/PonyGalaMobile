@@ -21,11 +21,15 @@ public class GalleryActivity extends Activity {
         artsWebProc.UIContext = this;
         artsWebProc.OutputView = findViewById(R.id.gvArts);
 
-        artWebRq.execute(2, Integer.parseInt(getIntent().getStringExtra("catId")));
-
         TextView tv = (TextView) findViewById(R.id.tvStatus);
-        tv.setText(getIntent().getStringExtra("catId"));
+        tv.setText(getText(R.string.load_start));
 
+        artWebRq.execute(
+                2,
+                Integer.parseInt(
+                        getIntent().getStringExtra("catId")
+                )
+        );
 
     }
 }

@@ -3,6 +3,12 @@
 
     <string name="app_name">Big DigitalArt Gallery</string>
     <string name="subtitle">for everyone, who likes quality arts of fandoms</string>
-    <string name="catName_ph">Gallery Category</string>
+    <string name="catName_ph">Категория</string>
+    <string name="load_form">Формирую запрос</string>
+    <string name="load_connect">Соединение с сервером</string>
+    <string name="load_start">Загружаю данные</string>
+    <string name="load_finish">Загрузка завершена</string>
+    <string name="load_process">Обработка ответа</string>
+    <string name="load_complete">Загрузка завршена</string>
 
 </resources>

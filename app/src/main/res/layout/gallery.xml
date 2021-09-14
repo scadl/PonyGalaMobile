@@ -19,5 +19,6 @@
         android:id="@+id/gvArts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:columnWidth="150dp"
         android:numColumns="3" />
 </LinearLayout>

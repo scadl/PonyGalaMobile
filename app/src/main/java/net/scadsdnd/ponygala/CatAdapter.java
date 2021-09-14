@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.Map;
@@ -40,13 +41,21 @@ public class CatAdapter extends ArrayAdapter<String> {
                 (ImageView) view.findViewById(R.id.imgCat5)
         };
 
-        helpersAG utilAg = new helpersAG();
+        ProgressBar[] pbThumbs = {
+                (ProgressBar) view.findViewById(R.id.pbCat1),
+                (ProgressBar) view.findViewById(R.id.pbCat2),
+                (ProgressBar) view.findViewById(R.id.pbCat3),
+                (ProgressBar) view.findViewById(R.id.pbCat4),
+                (ProgressBar) view.findViewById(R.id.pbCat5)
+        };
+
 
         if (Integer.valueOf(this.catData.get("counters")[pos])>5) {
             for(int i=0; i<5; i++){
-                imgThumbs[i].setImageBitmap(
-                        utilAg.loadImage(this.catData.get("img_"+i)[pos])
-                );
+                artRequest utilAg = new artRequest();
+                utilAg.outputImgView = imgThumbs[i];
+                utilAg.outputProgress = pbThumbs[i];
+                utilAg.execute(this.catData.get("img_"+i)[pos]);
             }
         }
         return view;

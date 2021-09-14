@@ -7,13 +7,23 @@
     android:paddingLeft="15dp"
     android:paddingTop="10dp"
     android:paddingRight="15dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:layout_gravity="center">
 
     <ImageView
         android:id="@+id/artTumbVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/btn_star_big_on" />
+        android:src="@android:drawable/ic_popup_sync" />
+
+    <ProgressBar
+        android:id="@+id/pbLoadArt"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="0" />
 
     <TextView
         android:id="@+id/textTitle"

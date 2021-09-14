@@ -16,55 +16,132 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/imgCat1"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
             android:gravity="center"
-            android:layout_weight="0.01"
-            android:src="@android:drawable/ic_popup_sync"
-            app:srcCompat="@android:drawable/ic_popup_sync" />
+            android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imgCat2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:gravity="center"
-            android:layout_weight="0.01"
-            android:src="@android:drawable/ic_popup_sync"
-            app:srcCompat="@android:drawable/ic_popup_sync" />
+            <ImageView
+                android:id="@+id/imgCat1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:src="@android:drawable/ic_popup_sync"
+                app:srcCompat="@android:drawable/ic_popup_sync" />
 
-        <ImageView
-            android:id="@+id/imgCat3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:gravity="center"
-            android:layout_weight="0.01"
-            android:src="@android:drawable/ic_popup_sync"
-            app:srcCompat="@android:drawable/ic_popup_sync" />
+            <ProgressBar
+                android:id="@+id/pbCat1"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0" />
 
-        <ImageView
-            android:id="@+id/imgCat4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:gravity="center"
-            android:layout_weight="0.01"
-            android:src="@android:drawable/ic_popup_sync"
-            app:srcCompat="@android:drawable/ic_popup_sync" />
+        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imgCat5"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
             android:gravity="center"
-            android:layout_weight="0.01"
-            android:src="@android:drawable/ic_popup_sync"
-            app:srcCompat="@android:drawable/ic_popup_sync" />
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imgCat2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:src="@android:drawable/ic_popup_sync"
+                app:srcCompat="@android:drawable/ic_popup_sync" />
+
+            <ProgressBar
+                android:id="@+id/pbCat2"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imgCat3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:src="@android:drawable/ic_popup_sync"
+                app:srcCompat="@android:drawable/ic_popup_sync" />
+
+            <ProgressBar
+                android:id="@+id/pbCat3"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imgCat4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:src="@android:drawable/ic_popup_sync"
+                app:srcCompat="@android:drawable/ic_popup_sync" />
+
+            <ProgressBar
+                android:id="@+id/pbCat4"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imgCat5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:src="@android:drawable/ic_popup_sync"
+                app:srcCompat="@android:drawable/ic_popup_sync" />
+
+            <ProgressBar
+                android:id="@+id/pbCat5"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -102,8 +101,10 @@ public class WebProcessor implements WebRequest.callBackInterface {
         Log.v("!", "Got arts from category");
 
         String[] artID = new String[jArr.length()];
-        String[] artName = new String[jArr.length()];
+        final String[] artName = new String[jArr.length()];
         String[] artThumb = new String[jArr.length()];
+        final String[] artFull =  new String[jArr.length()];
+        final String[] artAuthor = new String[jArr.length()];
 
         JSONObject jData = null;
 
@@ -113,6 +114,8 @@ public class WebProcessor implements WebRequest.callBackInterface {
                 artID[i] = jData.getString("aid");
                 artName[i] = jData.getString("title");
                 artThumb[i] = jData.getString("thumb");
+                artFull[i] = jData.getString("file_name");
+                artAuthor[i] = jData.getString("author");
             }
         } catch (JSONException e){
             e.printStackTrace();
@@ -126,6 +129,19 @@ public class WebProcessor implements WebRequest.callBackInterface {
         GridView outGridVW = (GridView) OutputView;
         ListAdapter grAdapt = new artAdapter(UIContext, artName, artData);
         outGridVW.setAdapter(grAdapt);
+
+        outGridVW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                
+                Intent intFull = new Intent(UIContext, ImageFull.class);
+                intFull.putExtra("imgFull", artFull[position]);
+                intFull.putExtra("imgTitle", artName[position]);
+                intFull.putExtra("imgAuthor", artAuthor[position]);
+                UIContext.startActivity(intFull);
+
+            }
+        });
 
     }
 }

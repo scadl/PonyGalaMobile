@@ -61,7 +61,7 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
         URL youServ = null;
         String getParams = null;
 
-        publishProgress("Building request");
+        publishProgress(UIContext.getString(R.string.load_form));
 
         try {
             switch (inParams[0]){
@@ -78,7 +78,7 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
             publishProgress(e.getLocalizedMessage());
         }
 
-        publishProgress("Executing request");
+        publishProgress(UIContext.getString(R.string.load_connect));
 
         HttpURLConnection urlConn = null;
         try {
@@ -94,8 +94,6 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
             publishProgress(e.getLocalizedMessage());
         }
 
-        publishProgress("Reading Data");
-
         try{
             InputStream inS = new BufferedInputStream(urlConn.getInputStream());
             BufferedReader myBuffRead = new BufferedReader(new InputStreamReader(inS, "UTF-8"), 8);
@@ -104,7 +102,7 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
 
             out = myStrBuild.toString();
 
-            publishProgress("Data loaded");
+            publishProgress(UIContext.getString(R.string.load_complete));
             inS.close();
 
             //readStream(inS)
@@ -128,6 +126,7 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
     @SuppressLint("WrongThread")
     @Override
     protected void onPostExecute(Integer act) {
+        publishProgress(UIContext.getString(R.string.load_process));
         Log.v("LOG", out);
         try {
 
@@ -155,6 +154,7 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
             publishProgress(e.getLocalizedMessage());
         }
 
+        publishProgress(UIContext.getString(R.string.load_complete));
         super.onPostExecute(act);
     }
 }

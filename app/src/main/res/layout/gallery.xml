@@ -15,6 +15,13 @@
         android:text="TextView"
         android:textAlignment="center" />
 
+    <ProgressBar
+        android:id="@+id/pbWaitGal"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="50dp" />
+
     <GridView
         android:id="@+id/gvArts"
         android:layout_width="match_parent"

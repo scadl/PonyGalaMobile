@@ -50,14 +50,18 @@ public class CatAdapter extends ArrayAdapter<String> {
         };
 
 
-        if (Integer.valueOf(this.catData.get("counters")[pos])>5) {
+        //if (Integer.valueOf(this.catData.get("counters")[pos])>5) {
             for(int i=0; i<5; i++){
-                artRequest utilAg = new artRequest();
-                utilAg.outputImgView = imgThumbs[i];
-                utilAg.outputProgress = pbThumbs[i];
-                utilAg.execute(this.catData.get("img_"+i)[pos]);
+                if(this.catData.get("img_"+i)[pos]!=null) {
+                    artRequest utilAg = new artRequest();
+                    utilAg.outputImgView = imgThumbs[i];
+                    utilAg.outputProgress = pbThumbs[i];
+                    utilAg.execute(this.catData.get("img_" + i)[pos]);
+                }
             }
-        }
+        //}
+
+        //notifyDataSetChanged();
         return view;
     }
 

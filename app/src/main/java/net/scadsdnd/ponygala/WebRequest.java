@@ -4,11 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -29,15 +28,21 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
     // Java callback registration
     // https://www.fandroid.info/urok-13-osnovy-java-metody-obratnogo-vyzova-callback/
 
-    interface callBackInterface {
-        void pCategoryList(JSONArray jArr);
-        void pArtList(JSONArray jArr);
+    interface webUICatIf {
+        void pCategoryListLoaded(JSONArray jArr);
+    }
+    interface webUIGalaIf{
+        void pArtListLoaded(JSONArray jArr);
     }
 
-    private callBackInterface CBVar;
+    private webUICatIf CBCatVar;
+    private webUIGalaIf CBGalVar;
 
-    public void regCb(callBackInterface CBVarIn){
-        this.CBVar = CBVarIn;
+    public void regCatCb(webUICatIf CBVarIn){
+        this.CBCatVar = CBVarIn;
+    }
+    public void regGalCb(webUIGalaIf CBVarIn){
+        this.CBGalVar = CBVarIn;
     }
 
     // Callback reg end
@@ -45,6 +50,7 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
     private String out;
     public Context UIContext;
     public TextView StatusUI;
+    public View pbIndicator;
 
     @Override
     protected void onPreExecute() {
@@ -75,7 +81,7 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
             youServ = new URL("https://artgala.scadsdnd.net/mods/api.php?"+getParams);
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            publishProgress(e.getLocalizedMessage());
+            publishProgress(UIContext.getString(R.string.load_error));
         }
 
         publishProgress(UIContext.getString(R.string.load_connect));
@@ -108,10 +114,11 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
             //readStream(inS)
         } catch (IOException e) {
             e.printStackTrace();
-            publishProgress(e.getLocalizedMessage());
+            publishProgress(UIContext.getString(R.string.load_error));
         } finally {
             urlConn.disconnect();
         }
+
 
         return inParams[0];
     }
@@ -123,12 +130,14 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
         super.onProgressUpdate(values);
     }
 
-    @SuppressLint("WrongThread")
     @Override
     protected void onPostExecute(Integer act) {
-        publishProgress(UIContext.getString(R.string.load_process));
-        Log.v("LOG", out);
+
+        StatusUI.setText(UIContext.getString(R.string.load_process));
+
         try {
+
+            Log.v("LOG", out);
 
             JSONArray jRows = new JSONArray(out);
 
@@ -136,25 +145,25 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
 
             switch (act){
                 case 1:
-                    CBVar.pCategoryList(jRows);
+                    CBCatVar.pCategoryListLoaded(jRows);
                     break;
                 case 2:
-                    CBVar.pArtList(jRows);
+                    CBGalVar.pArtListLoaded(jRows);
                     break;
                 default:
-                        Log.v("!SRV", "Unknown api req");
-                        publishProgress("Unknown api req");
+                        Log.e("!SRV", "Unknown API request");
+                        StatusUI.setText("Unknown API request");
                    break;
             }
 
+            StatusUI.setText(UIContext.getString(R.string.load_complete));
+            pbIndicator.setVisibility(View.GONE);
 
-
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            publishProgress(e.getLocalizedMessage());
+            StatusUI.setText(UIContext.getString(R.string.load_error));
         }
 
-        publishProgress(UIContext.getString(R.string.load_complete));
         super.onPostExecute(act);
     }
 }

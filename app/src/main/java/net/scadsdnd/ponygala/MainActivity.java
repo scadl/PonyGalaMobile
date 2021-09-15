@@ -2,13 +2,27 @@ package net.scadsdnd.ponygala;
 
 import android.app.*;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.*;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.Process;
+import java.util.HashMap;
+import java.util.Map;
+
+public class MainActivity extends Activity implements WebRequest.webUICatIf
 {
 
     Integer lvl = 0;
@@ -27,16 +41,17 @@ public class MainActivity extends Activity
         isAdmin = shPrf.getBoolean("admin_mode", false);
 
         WebRequest catWebRq = new WebRequest();
-        WebProcessor catWebProc = new WebProcessor();
 
         catWebRq.UIContext = this;
-        catWebRq.regCb(catWebProc);
+        catWebRq.regCatCb(this);
         catWebRq.StatusUI = (TextView) findViewById(R.id.subtitle);
-
-        catWebProc.UIContext = this;
-        catWebProc.OutputView = findViewById(R.id.catListView);
+        catWebRq.pbIndicator = (ProgressBar) findViewById(R.id.pbWaitMain);
 
         catWebRq.execute(1);
+
+        if (catWebRq.getStatus() == AsyncTask.Status.FINISHED){
+            Log.v("!!!!!!" , "Finished");
+        }
 
     }
 
@@ -61,4 +76,75 @@ public class MainActivity extends Activity
     }
 
 
+    @Override
+    public void pCategoryListLoaded(JSONArray jRows) {
+
+        Log.v("!","Got Categories");
+
+        final String[] catID = new String[jRows.length()];
+        String[] catName = new String[jRows.length()];
+        String[] catCounts = new String[jRows.length()];
+        String[][] catThumbs = new String[][]{
+                new String[jRows.length()],new String[jRows.length()],
+                new String[jRows.length()],new String[jRows.length()],
+                new String[jRows.length()]
+        };
+        JSONObject jData = null;
+
+        Map<String, String[]> srvData = new HashMap<>();
+
+        try {
+            for (int i = 0; i < jRows.length(); i++) {
+                jData = jRows.getJSONObject(i);
+
+                catID[i] = jData.getString("cat_id");
+                catName[i] = jData.getString("cat_name");
+                catCounts[i] = jData.getString("count");
+
+                if (Integer.valueOf(jData.getString("count")) > 5) {
+                    for (int j = 0; j < 5; j++) {
+                        catThumbs[j][i] = jData.getString("thumb_" + (j+1));
+                    }
+                }
+
+                //Log.v("JSON", jData.getString("cat_name"));
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        srvData.put("ids", catID);
+        srvData.put("names", catName);
+        srvData.put("counters", catCounts);
+        for(int j=0; j<5; j++){
+            srvData.put("img_"+j, catThumbs[j]);
+        }
+
+
+        // https://developer.android.com/reference/android/widget/ListView
+        //ArrayAdapter<String> myAdapt = new ArrayAdapter<String>(UIContext, android.R.layout.simple_list_item_1, catName);
+        //OutputView.setAdapter(myAdapt);
+
+        ListView OutputListVW = (ListView) findViewById(R.id.catListView);
+
+        ListAdapter listAdapter = new CatAdapter(this, catName, srvData);
+        OutputListVW.setAdapter(listAdapter);
+
+        OutputListVW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Toast.makeText(parent.getContext(), "db_id:" + catID[position], Toast.LENGTH_SHORT).show();
+
+                // Creating new activity on click
+                // https://developer.android.com/training/basics/firstapp/starting-activity#java
+                Intent intGala = new Intent(parent.getContext(), GalleryActivity.class);
+                intGala.putExtra("catId", catID[position]);
+                parent.getContext().startActivity(intGala);
+
+            }
+        });
+
+        //OutputListVW.setRecyclerListener(new );
+    }
 }

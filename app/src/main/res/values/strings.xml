@@ -10,5 +10,6 @@
     <string name="load_finish">Загрузка завершена</string>
     <string name="load_process">Обработка ответа</string>
     <string name="load_complete">Загрузка завршена</string>
+    <string name="load_error">Ошибка при загрузке данных</string>
 
 </resources>

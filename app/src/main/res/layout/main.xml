@@ -17,11 +17,20 @@
 		android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
+	<ProgressBar
+		android:id="@+id/pbWaitMain"
+		style="?android:attr/progressBarStyle"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:padding="50dp" />
+
 	<ListView
 		android:id="@+id/catListView"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_centerInParent="false" />
+		android:layout_centerInParent="false" >
+
+	</ListView>
 
 
 

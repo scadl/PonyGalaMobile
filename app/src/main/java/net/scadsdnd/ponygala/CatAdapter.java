@@ -1,6 +1,8 @@
 package net.scadsdnd.ponygala;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +16,9 @@ import java.util.Map;
 public class CatAdapter extends ArrayAdapter<String> {
 
     public Map<String, String[]> catData;
-    public TextView statusUI;
 
-    public CatAdapter(Context cont, String[] in_array, Map<String, String[]> allSrvData){
+    public CatAdapter(Context cont, String[] in_array){
         super(cont, R.layout.cat_entry, in_array);
-        this.catData = allSrvData;
-        this.statusUI = null;
     }
 
     public View getView(int pos, View contVw, ViewGroup vG){
@@ -32,6 +31,7 @@ public class CatAdapter extends ArrayAdapter<String> {
 
         TextView tvCatCount = (TextView) view.findViewById(R.id.CatNum);
         tvCatCount.setText(this.catData.get("counters")[pos]);
+
 
         ImageView[] imgThumbs = {
                 (ImageView) view.findViewById(R.id.imgCat1),
@@ -50,20 +50,22 @@ public class CatAdapter extends ArrayAdapter<String> {
         };
 
 
-        //if (Integer.valueOf(this.catData.get("counters")[pos])>5) {
-            for(int i=0; i<5; i++){
-                if(this.catData.get("img_"+i)[pos]!=null) {
+            String[] thumbArray = new String[5];
+            for (int i = 0; i < 5; i++) {                /// <<<<<<<<<<<<<<< remove cycle.
+                if (catData.get("img_" + i)[pos] != null) {
+
                     artRequest utilAg = new artRequest();
                     utilAg.outputImgView = imgThumbs[i];
                     utilAg.outputProgress = pbThumbs[i];
-                    utilAg.execute(this.catData.get("img_" + i)[pos]);
+                    utilAg.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, catData.get("img_" + i)[pos], "cat");
+
+                    thumbArray[i] = catData.get("img_"+i)[pos];
                 }
             }
-        //}
+            view.setTag(thumbArray);
 
         //notifyDataSetChanged();
         return view;
     }
-
 
 }

@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.os.*;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -89,9 +91,13 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 new String[jRows.length()],new String[jRows.length()],
                 new String[jRows.length()]
         };
+
         JSONObject jData = null;
 
         Map<String, String[]> srvData = new HashMap<>();
+        Map<String, String> imgQuery = new HashMap<>();
+
+        //String[] imgQuery = new String[jRows.length()*5];
 
         try {
             for (int i = 0; i < jRows.length(); i++) {
@@ -101,9 +107,10 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 catName[i] = jData.getString("cat_name");
                 catCounts[i] = jData.getString("count");
 
-                if (Integer.valueOf(jData.getString("count")) > 5) {
+                if (Integer.valueOf(jData.getString("count")) > 1) {
                     for (int j = 0; j < 5; j++) {
                         catThumbs[j][i] = jData.getString("thumb_" + (j+1));
+                        imgQuery.put("thumb_"+(i+j), jData.getString("thumb_" + (j+1)));
                     }
                 }
 
@@ -127,7 +134,9 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
         ListView OutputListVW = (ListView) findViewById(R.id.catListView);
 
-        ListAdapter listAdapter = new CatAdapter(this, catName, srvData);
+        CatAdapter listAdapter = new CatAdapter(this, catName);
+        listAdapter.catData = srvData;
+
         OutputListVW.setAdapter(listAdapter);
 
         OutputListVW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -145,6 +154,48 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
             }
         });
 
+        OutputListVW.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            int oldFirstVisibleItem = -1;
+            int oldVisibleItemCount = -1;
+
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                if(oldVisibleItemCount!=visibleItemCount || firstVisibleItem!=oldFirstVisibleItem) {
+
+                    for(int i = firstVisibleItem; i < visibleItemCount; i++){
+
+                        View currentString = view.getAdapter().getView(i,null, view);
+
+
+                        for(int j=0; j<5; j++){
+
+                            String[] thumbs = (String[]) currentString.getTag();
+                            if(thumbs != null) {
+
+                            }
+
+                        }
+
+                    }
+
+                    //Log.v("V", view.toString());
+
+                    Log.v("SC", firstVisibleItem + " " + visibleItemCount);
+                }
+
+                oldFirstVisibleItem = firstVisibleItem;
+                oldVisibleItemCount = visibleItemCount;
+            }
+        });
+
         //OutputListVW.setRecyclerListener(new );
     }
+
 }

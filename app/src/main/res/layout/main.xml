@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:gravity="top|center"
@@ -22,7 +23,8 @@
 		style="?android:attr/progressBarStyle"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:padding="50dp" />
+		android:padding="50dp"
+		tools:visibility="gone" />
 
 	<ListView
 		android:id="@+id/catListView"

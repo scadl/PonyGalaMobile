@@ -1,6 +1,7 @@
 package net.scadsdnd.ponygala;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class artAdapter extends ArrayAdapter<String> {
         artRequest utilAg = new artRequest();
         utilAg.outputImgView = (ImageView) view.findViewById(R.id.artTumbVw);
         utilAg.outputProgress = (ProgressBar) view.findViewById(R.id.pbLoadArt);
-        utilAg.execute(this.allArtInfo.get("art_tb")[position]);
+        utilAg.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this.allArtInfo.get("art_tb")[position], "gala");
 
         return view;
     }

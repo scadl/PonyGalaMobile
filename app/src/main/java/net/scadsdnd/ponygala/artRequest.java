@@ -23,21 +23,11 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap> {
 
     public ImageView outputImgView;
     public ProgressBar outputProgress;
-    //public Context UIContext;
-
-    private ImageView imv;
-    private String path;
-
-    public artRequest(){
-
-    }
 
     @Override
     protected void onPreExecute() {
         outputProgress.setIndeterminate(true);
         outputProgress.setMax(100);
-        this.imv = outputImgView;
-        this.path = imv.getTag().toString();
         super.onPreExecute();
     }
 
@@ -51,13 +41,13 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap> {
             //outputProgress.setIndeterminate(true);
             URL myURL = new URL(in_url[0]);
 
-            if(!Thread.interrupted() && imv.getTag().toString().equals(path)) {
+            if(!Thread.interrupted()) {
 
                 publishProgress(1,0);
 
                 final URLConnection myConn = myURL.openConnection();
                 myConn.connect();
-                Log.v("!C", String.valueOf(myConn.getContentLength()));
+                Log.v("!C", in_url[1] + " " + String.valueOf(myConn.getContentLength()));
 
                 // https://stackoverflow.com/questions/17830092/android-show-progress-bar-while-image-loading-dynamically
                 InputStream inStreamHolder = myConn.getInputStream();
@@ -103,6 +93,7 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap> {
     protected void onPostExecute(Bitmap bitmap) {
         outputImgView.setImageBitmap(bitmap);
         outputProgress.setVisibility(View.INVISIBLE);
+        //this.execute();
         super.onPostExecute(bitmap);
     }
 }

@@ -1,6 +1,8 @@
 package net.scadsdnd.ponygala;
 
 import android.app.Activity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,13 +18,21 @@ public class ImageActivity extends Activity {
     private int index = 0;
     private int max_index = 0;
 
+    private caheDB dbh = new caheDB(this);
+    private SQLiteDatabase db = dbh.getReadableDatabase();
+    String[] rowCols = {dbh.COLS[0],dbh.COLS[1], dbh.COLS[2], dbh.COLS[3]};
+
+
     private void loadImage(int index){
+
+        Cursor dbCursor = db.query(dbh.TAB, rowCols, dbh.COLS[0]+"="+index, null, null, null, null);
+
 
         TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
         TextView tvAuthor = (TextView) findViewById(R.id.tvAuthor);
 
-        tvTitle.setText(getIntent().getStringArrayListExtra("imgTitle").get(index));
-        tvAuthor.setText(getIntent().getStringArrayListExtra("imgAuthor").get(index));
+        tvTitle.setText(dbCursor.getString(2));
+        tvAuthor.setText(dbCursor.getString(3));
 
         artRequest imgFullRQ = new artRequest();
 
@@ -40,7 +50,7 @@ public class ImageActivity extends Activity {
         imgFullRQ.outputImgView = new ImageView[] {ivLoad};
         imgFullRQ.executeOnExecutor(
                 AsyncTask.SERIAL_EXECUTOR,
-                getIntent().getStringArrayListExtra("imgFull").get(index)
+                dbCursor.getString(1)
         );
     }
 

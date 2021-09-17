@@ -1,7 +1,9 @@
 package net.scadsdnd.ponygala;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -83,21 +85,26 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                ArrayList<String> bFull = new ArrayList<String>();
-                ArrayList<String> bName = new ArrayList<String>();
-                ArrayList<String> bAuth = new ArrayList<String>();
+                caheDB dbh = new caheDB(getParent());
+                SQLiteDatabase db = dbh.getWritableDatabase();
+                ContentValues dbRow = new ContentValues();
+                dbh.onUpgrade(db, 0, 0);
+
                 for(int i=0; i<artName.length; i++){
-                    bFull.add(artFull[i]);
-                    bName.add(artName[i]);
-                    bAuth.add(artAuthor[i]);
+                    dbRow.put(dbh.COLS[0], i);
+                    dbRow.put(dbh.COLS[1],artFull[i]);
+                    dbRow.put(dbh.COLS[2],artName[i]);
+                    dbRow.put(dbh.COLS[3],artAuthor[i]);
+                    db.insert(dbh.TAB, null, dbRow);
+                    dbRow.clear();
                 }
 
                 Intent intFull = new Intent(adapterView.getContext(), ImageActivity.class);
                 intFull.putExtra("imgMaxInd", artName.length);
                 intFull.putExtra("imgIndex", position);
-                intFull.putStringArrayListExtra("imgFull", bFull);
-                intFull.putStringArrayListExtra("imgTitle", bName);
-                intFull.putStringArrayListExtra("imgAuthor", bAuth);
+                //intFull.putStringArrayListExtra("imgFull", bFull);
+                //intFull.putStringArrayListExtra("imgTitle", bName);
+                //intFull.putStringArrayListExtra("imgAuthor", bAuth);
                 adapterView.getContext().startActivity(intFull);
 
             }

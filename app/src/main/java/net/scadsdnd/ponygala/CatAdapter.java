@@ -52,6 +52,7 @@ public class CatAdapter extends ArrayAdapter<String> {
         artRequest utilAg = new artRequest();
         utilAg.outputImgView = imgThumbs;
         utilAg.outputProgress = pbThumbs;
+        utilAg.retryLoad = false;
         utilAg.executeOnExecutor(
                 AsyncTask.SERIAL_EXECUTOR,
                 catData.get("img_0")[pos],

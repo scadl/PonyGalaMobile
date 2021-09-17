@@ -15,7 +15,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf {
@@ -70,7 +72,6 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
         }
 
         Map<String, String[]> artData = new HashMap<>();
-        artData.put("art_id", artID);
         artData.put("art_name", artName);
         artData.put("art_tb", artThumb);
 
@@ -83,9 +84,11 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
                 Intent intFull = new Intent(adapterView.getContext(), ImageActivity.class);
-                intFull.putExtra("imgFull", artFull[position]);
-                intFull.putExtra("imgTitle", artName[position]);
-                intFull.putExtra("imgAuthor", artAuthor[position]);
+                intFull.putExtra("imgMaxInd", artName.length);
+                intFull.putExtra("imgIndex", position);
+                intFull.putExtra("imgFull", artFull);
+                intFull.putExtra("imgTitle", artName);
+                intFull.putExtra("imgAuthor", artAuthor);
                 adapterView.getContext().startActivity(intFull);
 
             }

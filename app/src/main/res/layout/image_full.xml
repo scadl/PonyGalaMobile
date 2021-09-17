@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="#E3E3E3"
-        app:srcCompat="@android:drawable/stat_notify_sync" />
+        app:srcCompat="@android:drawable/ic_popup_sync" />
 
     <ProgressBar
         android:id="@+id/pbFull"
@@ -29,10 +29,11 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <Button
+        <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:src="@android:drawable/ic_media_previous"
             android:text="BW" />
 
         <LinearLayout
@@ -57,10 +58,11 @@
                 android:text="TextView" />
         </LinearLayout>
 
-        <Button
+        <ImageButton
             android:id="@+id/btnNext"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:src="@android:drawable/ic_media_next"
             android:text="FW" />
     </LinearLayout>
 </LinearLayout>

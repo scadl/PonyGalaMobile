@@ -1,32 +1,83 @@
 package net.scadsdnd.ponygala;
 
 import android.app.Activity;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ImageActivity extends Activity {
 
-    private void loadImage(){
+    private int index = 0;
+    private int max_index = 0;
+
+    private void loadImage(int index){
+
+        TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+        TextView tvAuthor = (TextView) findViewById(R.id.tvAuthor);
+
+        tvTitle.setText(getIntent().getStringArrayExtra("imgTitle")[ index ]);
+        tvAuthor.setText(getIntent().getStringArrayExtra("imgAuthor")[ index ]);
+
         artRequest imgFullRQ = new artRequest();
-        imgFullRQ.outputProgress = new ProgressBar[] {(ProgressBar) findViewById(R.id.pbFull)};
-        imgFullRQ.outputImgView = new ImageView[] {(ImageView) findViewById(R.id.ivFull)};
-        imgFullRQ.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getIntent().getStringExtra("imgFull"));
+
+        ProgressBar pbLoad = (ProgressBar) findViewById(R.id.pbFull);
+        ImageView ivLoad = (ImageView) findViewById(R.id.ivFull);
+        pbLoad.setVisibility(View.VISIBLE);
+        ivLoad.setImageBitmap(
+                BitmapFactory.decodeResource(
+                        this.getResources(),
+                        android.R.drawable.ic_popup_sync)
+        );
+
+        imgFullRQ.retryLoad = true;
+        imgFullRQ.outputProgress = new ProgressBar[] {pbLoad};
+        imgFullRQ.outputImgView = new ImageView[] {ivLoad};
+        imgFullRQ.executeOnExecutor(
+                AsyncTask.SERIAL_EXECUTOR,
+                getIntent().getStringArrayExtra("imgFull")[index]
+        );
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        index = getIntent().getIntExtra("imgIndex", 0);
+        max_index = getIntent().getIntExtra("imgMaxInd", 0);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_full);
 
-        TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
-        TextView tvAuthor = (TextView) findViewById(R.id.tvAuthor);
-        tvTitle.setText(getIntent().getStringExtra("imgTitle"));
-        tvAuthor.setText(getIntent().getStringExtra("imgAuthor"));
-        
-        loadImage();
+        loadImage( index );
+
+        ImageButton btnNext = (ImageButton) findViewById(R.id.btnNext);
+        btnNext.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                if(index < max_index-1) {
+                    index++;
+                    loadImage(index);
+                }
+            }
+        });
+
+        ImageButton btnBack = (ImageButton) findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(index > -1) {
+                    index--;
+                    loadImage(index);
+                }
+            }
+        });
+
         
     }
 }

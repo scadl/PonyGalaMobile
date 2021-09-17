@@ -83,12 +83,21 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
+                ArrayList<String> bFull = new ArrayList<String>();
+                ArrayList<String> bName = new ArrayList<String>();
+                ArrayList<String> bAuth = new ArrayList<String>();
+                for(int i=0; i<artName.length; i++){
+                    bFull.add(artFull[i]);
+                    bName.add(artName[i]);
+                    bAuth.add(artAuthor[i]);
+                }
+
                 Intent intFull = new Intent(adapterView.getContext(), ImageActivity.class);
                 intFull.putExtra("imgMaxInd", artName.length);
                 intFull.putExtra("imgIndex", position);
-                intFull.putExtra("imgFull", artFull);
-                intFull.putExtra("imgTitle", artName);
-                intFull.putExtra("imgAuthor", artAuthor);
+                intFull.putStringArrayListExtra("imgFull", bFull);
+                intFull.putStringArrayListExtra("imgTitle", bName);
+                intFull.putStringArrayListExtra("imgAuthor", bAuth);
                 adapterView.getContext().startActivity(intFull);
 
             }

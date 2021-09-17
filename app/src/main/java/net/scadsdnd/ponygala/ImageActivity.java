@@ -21,8 +21,8 @@ public class ImageActivity extends Activity {
         TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
         TextView tvAuthor = (TextView) findViewById(R.id.tvAuthor);
 
-        tvTitle.setText(getIntent().getStringArrayExtra("imgTitle")[ index ]);
-        tvAuthor.setText(getIntent().getStringArrayExtra("imgAuthor")[ index ]);
+        tvTitle.setText(getIntent().getStringArrayListExtra("imgTitle").get(index));
+        tvAuthor.setText(getIntent().getStringArrayListExtra("imgAuthor").get(index));
 
         artRequest imgFullRQ = new artRequest();
 
@@ -40,7 +40,7 @@ public class ImageActivity extends Activity {
         imgFullRQ.outputImgView = new ImageView[] {ivLoad};
         imgFullRQ.executeOnExecutor(
                 AsyncTask.SERIAL_EXECUTOR,
-                getIntent().getStringArrayExtra("imgFull")[index]
+                getIntent().getStringArrayListExtra("imgFull").get(index)
         );
     }
 

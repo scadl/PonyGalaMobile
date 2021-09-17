@@ -16,66 +16,89 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class artRequest extends AsyncTask<String, Integer, Bitmap> {
+public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
 
-    public ImageView outputImgView;
-    public ProgressBar outputProgress;
+    public ImageView[] outputImgView;
+    public ProgressBar[] outputProgress;
+    private Integer maxOutputs;
 
     @Override
     protected void onPreExecute() {
-        outputProgress.setIndeterminate(true);
-        outputProgress.setMax(100);
+
+        this.maxOutputs = outputImgView.length;
+
+        for (int i=0; i < this.maxOutputs; i++) {
+            outputProgress[i].setIndeterminate(true);
+            outputProgress[i].setMax(100);
+        }
+
         super.onPreExecute();
     }
 
     @Override
-    protected Bitmap doInBackground(String... in_url) {
+    protected Bitmap[] doInBackground(String... in_url) {
 
-        publishProgress(0,0);
+        Bitmap bmImage[] = new Bitmap[this.maxOutputs];
 
-        Bitmap bmImage = null;
-        try {
-            //outputProgress.setIndeterminate(true);
-            URL myURL = new URL(in_url[0]);
+        for (int i=0; i < this.maxOutputs; i++) {
 
-            if(!Thread.interrupted()) {
+            Log.v("arr", String.valueOf(i));
 
-                publishProgress(1,0);
+            if(in_url[i]!=null) {
 
-                final URLConnection myConn = myURL.openConnection();
-                myConn.connect();
-                Log.v("!C", in_url[1] + " " + String.valueOf(myConn.getContentLength()));
+                // Will hold retry download until image loaded
+                //while (bmImage[i]==null) {
 
-                // https://stackoverflow.com/questions/17830092/android-show-progress-bar-while-image-loading-dynamically
-                InputStream inStreamHolder = myConn.getInputStream();
-                ByteArrayOutputStream outStreamHolder = new ByteArrayOutputStream();
-                int fileLength = myConn.getContentLength();
-                byte data[] = new byte[fileLength];
-                int increment = fileLength / 100;
-                int count = -1;
-                int progress = 0;
+                    try {
+                        //outputProgress.setIndeterminate(true);
+                        URL myURL = new URL(in_url[i]);
 
-                while ((count = inStreamHolder.read(data, 0, increment))!=-1){
-                    progress += count;
-                    publishProgress(1,((progress*100)/fileLength));
-                    outStreamHolder.write(data, 0, count);
-                }
+                        if (!Thread.interrupted()) {
 
-                bmImage = BitmapFactory.decodeByteArray(outStreamHolder.toByteArray(), 0, data.length);
+                            publishProgress(i, 1, 0);
 
-                inStreamHolder.close();
-                outStreamHolder.close();
+                            final URLConnection myConn = myURL.openConnection();
+                            myConn.connect();
+                            Log.v("!C", String.valueOf(myConn.getContentLength()));
 
-            } else {
-                cancel(true);
+                            // https://stackoverflow.com/questions/17830092/android-show-progress-bar-while-image-loading-dynamically
+                            InputStream inStreamHolder = myConn.getInputStream();
+                            ByteArrayOutputStream outStreamHolder = new ByteArrayOutputStream();
+                            int fileLength = myConn.getContentLength();
+                            byte data[] = new byte[fileLength];
+                            int increment = fileLength / 100;
+                            int count = -1;
+                            int progress = 0;
+
+                            while ((count = inStreamHolder.read(data, 0, increment)) != -1) {
+                                progress += count;
+                                publishProgress(i, 1, ((progress * 100) / fileLength));
+                                outStreamHolder.write(data, 0, count);
+                            }
+
+                            bmImage[i] = BitmapFactory.decodeByteArray(
+                                    outStreamHolder.toByteArray(), 0, data.length);
+
+                            inStreamHolder.close();
+                            outStreamHolder.close();
+
+                            //Thread.sleep(1000);
+
+                        } else {
+                            cancel(true);
+                        }
+
+                    } catch (IOException e) {
+                        Log.e("IO_ERR", e.toString());
+                    } catch (Exception e) {
+                        Log.e("IMG_ERR", e.toString());
+                    }
+            // } // retry end
             }
-
-        } catch (Exception e){
-            Log.e("IMG_ERR", e.getLocalizedMessage());
-            return null;
         }
 
         return bmImage;
@@ -84,16 +107,19 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap> {
 
     @Override
     protected void onProgressUpdate(Integer... values) {
-        outputProgress.setIndeterminate(values[0]==0);
-        outputProgress.setProgress(values[1]);
+        outputProgress[values[0]].setIndeterminate(values[1] == 0);
+        outputProgress[values[0]].setProgress(values[2]);
         super.onProgressUpdate(values);
     }
 
     @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        outputImgView.setImageBitmap(bitmap);
-        outputProgress.setVisibility(View.INVISIBLE);
-        //this.execute();
+    protected void onPostExecute(Bitmap[] bitmap) {
+        for (int i=0; i < this.maxOutputs; i++) {
+            if(bitmap[i]!=null){
+                outputImgView[i].setImageBitmap(bitmap[i]);
+            }
+            outputProgress[i].setVisibility(View.INVISIBLE);
+        }
         super.onPostExecute(bitmap);
     }
 }

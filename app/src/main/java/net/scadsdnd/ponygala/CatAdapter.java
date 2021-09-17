@@ -49,20 +49,17 @@ public class CatAdapter extends ArrayAdapter<String> {
                 (ProgressBar) view.findViewById(R.id.pbCat5)
         };
 
-
-            String[] thumbArray = new String[5];
-            for (int i = 0; i < 5; i++) {                /// <<<<<<<<<<<<<<< remove cycle.
-                if (catData.get("img_" + i)[pos] != null) {
-
-                    artRequest utilAg = new artRequest();
-                    utilAg.outputImgView = imgThumbs[i];
-                    utilAg.outputProgress = pbThumbs[i];
-                    utilAg.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, catData.get("img_" + i)[pos], "cat");
-
-                    thumbArray[i] = catData.get("img_"+i)[pos];
-                }
-            }
-            view.setTag(thumbArray);
+        artRequest utilAg = new artRequest();
+        utilAg.outputImgView = imgThumbs;
+        utilAg.outputProgress = pbThumbs;
+        utilAg.executeOnExecutor(
+                AsyncTask.SERIAL_EXECUTOR,
+                catData.get("img_0")[pos],
+                catData.get("img_1")[pos],
+                catData.get("img_2")[pos],
+                catData.get("img_3")[pos],
+                catData.get("img_4")[pos]
+        );
 
         //notifyDataSetChanged();
         return view;

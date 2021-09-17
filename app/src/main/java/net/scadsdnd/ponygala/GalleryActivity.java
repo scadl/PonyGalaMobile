@@ -82,7 +82,7 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                Intent intFull = new Intent(adapterView.getContext(), ImageFull.class);
+                Intent intFull = new Intent(adapterView.getContext(), ImageActivity.class);
                 intFull.putExtra("imgFull", artFull[position]);
                 intFull.putExtra("imgTitle", artName[position]);
                 intFull.putExtra("imgAuthor", artAuthor[position]);

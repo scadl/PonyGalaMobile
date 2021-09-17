@@ -30,8 +30,8 @@ public class artAdapter extends ArrayAdapter<String> {
         tvAuthor.setText(getItem(position));
 
         artRequest utilAg = new artRequest();
-        utilAg.outputImgView = (ImageView) view.findViewById(R.id.artTumbVw);
-        utilAg.outputProgress = (ProgressBar) view.findViewById(R.id.pbLoadArt);
+        utilAg.outputImgView = new ImageView[] {(ImageView) view.findViewById(R.id.artTumbVw)};
+        utilAg.outputProgress = new ProgressBar[] {(ProgressBar) view.findViewById(R.id.pbLoadArt)};
         utilAg.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this.allArtInfo.get("art_tb")[position], "gala");
 
         return view;

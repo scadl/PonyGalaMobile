@@ -154,47 +154,6 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
             }
         });
 
-        OutputListVW.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-            int oldFirstVisibleItem = -1;
-            int oldVisibleItemCount = -1;
-
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                if(oldVisibleItemCount!=visibleItemCount || firstVisibleItem!=oldFirstVisibleItem) {
-
-                    for(int i = firstVisibleItem; i < visibleItemCount; i++){
-
-                        View currentString = view.getAdapter().getView(i,null, view);
-
-
-                        for(int j=0; j<5; j++){
-
-                            String[] thumbs = (String[]) currentString.getTag();
-                            if(thumbs != null) {
-
-                            }
-
-                        }
-
-                    }
-
-                    //Log.v("V", view.toString());
-
-                    Log.v("SC", firstVisibleItem + " " + visibleItemCount);
-                }
-
-                oldFirstVisibleItem = firstVisibleItem;
-                oldVisibleItemCount = visibleItemCount;
-            }
-        });
-
         //OutputListVW.setRecyclerListener(new );
     }
 

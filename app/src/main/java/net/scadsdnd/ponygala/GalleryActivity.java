@@ -24,8 +24,15 @@ import java.util.Map;
 
 public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf {
 
+    caheDB dbh;
+    SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        dbh = new caheDB(this);
+        db = dbh.getWritableDatabase();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery);
 
@@ -85,8 +92,6 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                caheDB dbh = new caheDB(getParent());
-                SQLiteDatabase db = dbh.getWritableDatabase();
                 ContentValues dbRow = new ContentValues();
                 dbh.onUpgrade(db, 0, 0);
 

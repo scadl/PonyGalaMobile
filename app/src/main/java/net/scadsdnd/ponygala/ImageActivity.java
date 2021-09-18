@@ -18,14 +18,15 @@ public class ImageActivity extends Activity {
     private int index = 0;
     private int max_index = 0;
 
-    private caheDB dbh = new caheDB(this);
-    private SQLiteDatabase db = dbh.getReadableDatabase();
-    String[] rowCols = {dbh.COLS[0],dbh.COLS[1], dbh.COLS[2], dbh.COLS[3]};
-
+    private caheDB dbh;
+    private SQLiteDatabase db;
 
     private void loadImage(int index){
 
-        Cursor dbCursor = db.query(dbh.TAB, rowCols, dbh.COLS[0]+"="+index, null, null, null, null);
+        String[] rowCols = {dbh.COLS[0],dbh.COLS[1], dbh.COLS[2], dbh.COLS[3]};
+        String[] dbParams = { String.valueOf(index) };
+        Cursor dbCursor = db.query(dbh.TAB, rowCols, dbh.COLS[0]+" = ?", dbParams, null, null, null);
+        dbCursor.moveToNext();
 
 
         TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
@@ -56,6 +57,9 @@ public class ImageActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        dbh = new caheDB(this);
+        db = dbh.getReadableDatabase();
 
         index = getIntent().getIntExtra("imgIndex", 0);
         max_index = getIntent().getIntExtra("imgMaxInd", 0);

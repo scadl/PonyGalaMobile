@@ -33,6 +33,8 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
         dbh = new caheDB(this);
         db = dbh.getWritableDatabase();
 
+        dbh.onUpgrade(db, 0, 0);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery);
 
@@ -57,6 +59,8 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
 
     public void pArtListLoaded(JSONArray jArr) {
 
+        ContentValues dbRow = new ContentValues();
+
         Log.v("!", "Got arts from category");
 
         String[] artID = new String[jArr.length()];
@@ -69,16 +73,27 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
 
         try {
             for (int i = 0; i < jArr.length(); i++) {
+
                 jData = jArr.getJSONObject(i);
+
                 artID[i] = jData.getString("aid");
                 artName[i] = jData.getString("title");
                 artThumb[i] = jData.getString("thumb");
                 artFull[i] = jData.getString("file_name");
                 artAuthor[i] = jData.getString("author");
+
+                dbRow.put(dbh.COLS[0], i);
+                dbRow.put(dbh.COLS[1],artFull[i]);
+                dbRow.put(dbh.COLS[2],artName[i]);
+                dbRow.put(dbh.COLS[3],artAuthor[i]);
+                db.insert(dbh.TAB, null, dbRow);
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        dbRow.clear();
 
         Map<String, String[]> artData = new HashMap<>();
         artData.put("art_name", artName);
@@ -91,18 +106,6 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
         outGridVW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
-                ContentValues dbRow = new ContentValues();
-                dbh.onUpgrade(db, 0, 0);
-
-                for(int i=0; i<artName.length; i++){
-                    dbRow.put(dbh.COLS[0], i);
-                    dbRow.put(dbh.COLS[1],artFull[i]);
-                    dbRow.put(dbh.COLS[2],artName[i]);
-                    dbRow.put(dbh.COLS[3],artAuthor[i]);
-                    db.insert(dbh.TAB, null, dbRow);
-                    dbRow.clear();
-                }
 
                 Intent intFull = new Intent(adapterView.getContext(), ImageActivity.class);
                 intFull.putExtra("imgMaxInd", artName.length);

@@ -42,7 +42,7 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
 
                 final URLConnection myConn = myURL.openConnection();
                 myConn.connect();
-                Log.v("!C", String.valueOf(myConn.getContentLength()));
+                //Log.v("!C", String.valueOf(myConn.getContentLength()));
 
                 // https://stackoverflow.com/questions/17830092/android-show-progress-bar-while-image-loading-dynamically
                 InputStream inStreamHolder = myConn.getInputStream();
@@ -100,7 +100,7 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
 
         for (int i=0; i < this.maxOutputs; i++) {
 
-            Log.v("arr", String.valueOf(i));
+            //Log.v("arr", String.valueOf(i));
 
             if(in_url[i]!=null) {
 

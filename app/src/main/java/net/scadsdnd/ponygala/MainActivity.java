@@ -5,10 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.*;
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -29,6 +33,8 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
     Integer lvl = 0;
     Boolean isAdmin = false;
+    WebRequest catWebRq;
+    Boolean lockLoad = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,7 +48,7 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
         SharedPreferences shPrf = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
         isAdmin = shPrf.getBoolean("admin_mode", false);
 
-        WebRequest catWebRq = new WebRequest();
+        catWebRq = new WebRequest();
 
         catWebRq.UIContext = this;
         catWebRq.regCatCb(this);
@@ -55,6 +61,41 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
             Log.v("!!!!!!" , "Finished");
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.mReload:
+                if(catWebRq.getStatus() == AsyncTask.Status.FINISHED) {
+                    catWebRq.execute(1);
+                }
+                break;
+            case R.id.mLogin:
+                Toast.makeText(this, "Login not available now", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.mExit:
+                finish();
+                System.exit(0);
+                break;
+            case R.id.mLockLoad:
+                MenuItem mR = item;
+                mR.setChecked(!mR.isChecked());
+                lockLoad = mR.isChecked();
+                break;
+            case R.id.mSelDate:
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -136,6 +177,7 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
         CatAdapter listAdapter = new CatAdapter(this, catName);
         listAdapter.catData = srvData;
+        listAdapter.isLoadLocked = lockLoad;
 
         OutputListVW.setAdapter(listAdapter);
 

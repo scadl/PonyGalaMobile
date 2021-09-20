@@ -16,6 +16,7 @@ import java.util.Map;
 public class CatAdapter extends ArrayAdapter<String> {
 
     public Map<String, String[]> catData;
+    public Boolean isLoadLocked = false;
 
     public CatAdapter(Context cont, String[] in_array){
         super(cont, R.layout.cat_entry, in_array);
@@ -52,7 +53,7 @@ public class CatAdapter extends ArrayAdapter<String> {
         artRequest utilAg = new artRequest();
         utilAg.outputImgView = imgThumbs;
         utilAg.outputProgress = pbThumbs;
-        utilAg.retryLoad = false;
+        utilAg.retryLoad = isLoadLocked;
         utilAg.executeOnExecutor(
                 AsyncTask.SERIAL_EXECUTOR,
                 catData.get("img_0")[pos],

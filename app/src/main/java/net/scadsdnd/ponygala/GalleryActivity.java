@@ -87,13 +87,15 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
                 dbRow.put(dbh.COLS[2],artName[i]);
                 dbRow.put(dbh.COLS[3],artAuthor[i]);
                 db.insert(dbh.TAB, null, dbRow);
+                dbRow.clear();
 
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        dbRow.clear();
+        db.close();
+        dbh.close();
 
         Map<String, String[]> artData = new HashMap<>();
         artData.put("art_name", artName);

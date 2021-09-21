@@ -16,5 +16,9 @@
     <string name="mReload">Перезагрузить страницу</string>
     <string name="mLogin">Вход администратора</string>
     <string name="mExit">Выход из программы</string>
+    <string name="btnCancel">Отмена</string>
+    <string name="dlgDateTitle">Дата подборки</string>
+    <string name="dlgDateMsg">Выберите дату подборки, которую хотите посмотреть</string>
+    <string name="exitConfirm">Нажмите ещё раз \'Назад\', чтобы выйти</string>
 
 </resources>

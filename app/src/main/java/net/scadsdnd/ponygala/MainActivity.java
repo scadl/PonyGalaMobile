@@ -2,21 +2,23 @@ package net.scadsdnd.ponygala;
 
 import android.app.*;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.util.Calendar;
 import android.os.*;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Checkable;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
+import android.widget.ArrayAdapter;
+import android.widget.CalendarView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +26,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.Process;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
     Integer lvl = 0;
     Boolean isAdmin = false;
-    WebRequest catWebRq;
+    WebRequest lastCatWebRq;
     Boolean lockLoad = false;
 
     @Override
@@ -48,18 +49,30 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
         SharedPreferences shPrf = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
         isAdmin = shPrf.getBoolean("admin_mode", false);
 
-        catWebRq = new WebRequest();
+        sectionTask().execute(1);
+
+    }
+
+    private WebRequest sectionTask(){
+
+        if(lastCatWebRq!= null && lastCatWebRq.getStatus() != AsyncTask.Status.FINISHED) {
+            lastCatWebRq.cancel(true);
+        }
+
+        WebRequest catWebRq = new WebRequest();
 
         catWebRq.UIContext = this;
         catWebRq.regCatCb(this);
         catWebRq.StatusUI = (TextView) findViewById(R.id.subtitle);
         catWebRq.pbIndicator = (ProgressBar) findViewById(R.id.pbWaitMain);
 
-        catWebRq.execute(1);
-
         if (catWebRq.getStatus() == AsyncTask.Status.FINISHED){
             Log.v("!!!!!!" , "Finished");
         }
+
+        lastCatWebRq = catWebRq;
+
+        return catWebRq;
 
     }
 
@@ -74,9 +87,7 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
         switch (item.getItemId()){
             case R.id.mReload:
-                if(catWebRq.getStatus() == AsyncTask.Status.FINISHED) {
-                    catWebRq.execute(1);
-                }
+                sectionTask().execute(1);
                 break;
             case R.id.mLogin:
                 Toast.makeText(this, "Login not available now", Toast.LENGTH_SHORT).show();
@@ -92,6 +103,41 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 break;
             case R.id.mSelDate:
 
+                final AlertDialog.Builder dlgDateTpl = new AlertDialog.Builder(this);
+                dlgDateTpl.setTitle(R.string.dlgDateTitle);
+                dlgDateTpl.setMessage(R.string.dlgDateMsg);
+                dlgDateTpl.setIcon(android.R.drawable.ic_menu_today);
+
+                String[] optData = {"Sel.1","Sel.2","Sel.3"};
+
+                ArrayAdapter<String> optAdapt = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, optData);
+                optAdapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                Spinner calDate = new Spinner(this);
+                LinearLayout.LayoutParams lyParam = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                );
+                calDate.setLayoutParams(lyParam);
+                calDate.setAdapter(optAdapt);
+                calDate.setPadding(25,5,25,5);
+                dlgDateTpl.setView(calDate);
+
+                dlgDateTpl.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                dlgDateTpl.setNegativeButton(this.getString(R.string.btnCancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                AlertDialog dlgDate = dlgDateTpl.create();
+                dlgDate.show();
+
                 break;
         }
 
@@ -105,7 +151,10 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
         lvl-=1;
         switch (lvl){
             case -1:
-                Toast.makeText(MainActivity.this, "Нажмите ещё раз 'Назад', чтобы выйти.", Toast.LENGTH_LONG).show();
+                Toast.makeText(
+                        MainActivity.this,
+                        this.getString(R.string.exitConfirm),
+                        Toast.LENGTH_LONG).show();
                 break;
             case -2:
                 finish();

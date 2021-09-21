@@ -3,147 +3,164 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="15dp"
-    android:paddingTop="10dp"
-    android:paddingRight="15dp"
-    android:paddingBottom="10dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.04"
+        android:layout_weight="1"
         android:gravity="center"
+        android:padding="5dp"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:background="#E3E3E3">
 
             <ImageView
                 android:id="@+id/imgCat1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:padding="5dp"
+                android:scaleType="fitCenter"
                 android:src="@android:drawable/ic_popup_sync"
                 app:srcCompat="@android:drawable/ic_popup_sync" />
 
             <ProgressBar
                 android:id="@+id/pbCat1"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:indeterminate="false"
                 android:max="100"
+                android:padding="5dp"
                 android:progress="0" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:background="#E3E3E3">
 
             <ImageView
                 android:id="@+id/imgCat2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:padding="5dp"
+                android:scaleType="fitCenter"
                 android:src="@android:drawable/ic_popup_sync"
                 app:srcCompat="@android:drawable/ic_popup_sync" />
 
             <ProgressBar
                 android:id="@+id/pbCat2"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:indeterminate="false"
                 android:max="100"
+                android:padding="5dp"
                 android:progress="0" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:background="#E3E3E3">
 
             <ImageView
                 android:id="@+id/imgCat3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:padding="5dp"
+                android:scaleType="fitCenter"
                 android:src="@android:drawable/ic_popup_sync"
                 app:srcCompat="@android:drawable/ic_popup_sync" />
 
             <ProgressBar
                 android:id="@+id/pbCat3"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:indeterminate="false"
                 android:max="100"
+                android:padding="5dp"
                 android:progress="0" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:background="#E3E3E3">
 
             <ImageView
                 android:id="@+id/imgCat4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:padding="5dp"
+                android:scaleType="fitCenter"
                 android:src="@android:drawable/ic_popup_sync"
                 app:srcCompat="@android:drawable/ic_popup_sync" />
 
             <ProgressBar
                 android:id="@+id/pbCat4"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:indeterminate="false"
                 android:max="100"
+                android:padding="5dp"
                 android:progress="0" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:background="#E3E3E3">
 
             <ImageView
                 android:id="@+id/imgCat5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:padding="5dp"
+                android:scaleType="fitCenter"
                 android:src="@android:drawable/ic_popup_sync"
                 app:srcCompat="@android:drawable/ic_popup_sync" />
 
             <ProgressBar
                 android:id="@+id/pbCat5"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:indeterminate="false"
                 android:max="100"
+                android:padding="5dp"
                 android:progress="0" />
         </LinearLayout>
 
@@ -152,8 +169,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.05"
+        android:layout_weight="1"
         android:gravity="center"
+        android:padding="10dp"
         android:orientation="horizontal">
 
         <TextView

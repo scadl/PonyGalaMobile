@@ -33,7 +33,7 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
         Bitmap bmImage = null;
 
         try {
-            //outputProgress.setIndeterminate(true);
+
             URL myURL = new URL(in_url);
 
             if (!Thread.interrupted()) {
@@ -140,8 +140,9 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
         for (int i=0; i < this.maxOutputs; i++) {
             if(bitmap[i]!=null){
                 outputImgView[i].setImageBitmap(bitmap[i]);
+                outputImgView[i].setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
-            outputProgress[i].setVisibility(View.INVISIBLE);
+            outputProgress[i].setVisibility(View.GONE);
         }
         super.onPostExecute(bitmap);
     }

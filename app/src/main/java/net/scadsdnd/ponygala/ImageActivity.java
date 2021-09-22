@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
+import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -37,8 +39,9 @@ public class ImageActivity extends Activity {
 
         artRequest imgFullRQ = new artRequest();
 
+        final ImageView ivLoad = (ImageView) findViewById(R.id.ivFull);
         ProgressBar pbLoad = (ProgressBar) findViewById(R.id.pbFull);
-        ImageView ivLoad = (ImageView) findViewById(R.id.ivFull);
+
         pbLoad.setVisibility(View.VISIBLE);
         ivLoad.setImageBitmap(
                 BitmapFactory.decodeResource(
@@ -49,10 +52,13 @@ public class ImageActivity extends Activity {
         imgFullRQ.retryLoad = true;
         imgFullRQ.outputProgress = new ProgressBar[] {pbLoad};
         imgFullRQ.outputImgView = new ImageView[] {ivLoad};
+        imgFullRQ.scaleType = ImageView.ScaleType.FIT_CENTER;
         imgFullRQ.executeOnExecutor(
                 AsyncTask.SERIAL_EXECUTOR,
                 dbCursor.getString(1)
         );
+
+        //??? https://stackoverflow.com/questions/16557076/how-to-smoothly-move-a-image-view-with-users-finger-on-android-emulator
     }
 
     @Override
@@ -92,6 +98,28 @@ public class ImageActivity extends Activity {
             }
         });
 
+        ImageButton btnReload = (ImageButton) findViewById(R.id.btnReload);
+        btnReload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadImage(index);
+            }
+        });
+
+        ImageButton btnFit = (ImageButton) findViewById(R.id.btnFit);
+        btnFit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                ImageView ivLoad = (ImageView) findViewById(R.id.ivFull);
+                if(ivLoad.getScaleType() == ImageView.ScaleType.FIT_CENTER) {
+                    ivLoad.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                } else {
+                    ivLoad.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                }
+
+            }
+        });
         
     }
 }

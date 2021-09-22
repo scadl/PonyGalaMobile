@@ -25,6 +25,7 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
     public ImageView[] outputImgView;
     public ProgressBar[] outputProgress;
     public Boolean retryLoad;
+    public ImageView.ScaleType scaleType = ImageView.ScaleType.CENTER_CROP;
 
     private Integer maxOutputs;
 
@@ -140,7 +141,7 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
         for (int i=0; i < this.maxOutputs; i++) {
             if(bitmap[i]!=null){
                 outputImgView[i].setImageBitmap(bitmap[i]);
-                outputImgView[i].setScaleType(ImageView.ScaleType.CENTER_CROP);
+                outputImgView[i].setScaleType(scaleType);
             }
             outputProgress[i].setVisibility(View.GONE);
         }

@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">Big DigitalArt Gallery</string>
+    <string name="title_cat">Список категорий</string>
+    <string name="title_gala">Просмотр категории</string>
+    <string name="title_full">Арт целиком</string>
     <string name="subtitle">for everyone, who likes quality arts of fandoms</string>
     <string name="catName_ph">Категория</string>
     <string name="load_form">Формирую запрос</string>
@@ -14,11 +17,11 @@
     <string name="mSelDate">Выбрать дату подборки</string>
     <string name="mLockLoad">Ожидать загрузки миниатюр</string>
     <string name="mReload">Перезагрузить страницу</string>
-    <string name="mLogin">Вход администратора</string>
+    <string name="mLogin">Администрирование</string>
     <string name="mExit">Выход из программы</string>
     <string name="btnCancel">Отмена</string>
     <string name="dlgDateTitle">Дата подборки</string>
-    <string name="dlgDateMsg">Выберите дату подборки, которую хотите посмотреть</string>
+    <string name="dlgDateMsg">Выберите дату публикации подборки</string>
     <string name="exitConfirm">Нажмите ещё раз \'Назад\', чтобы выйти</string>
 
 </resources>

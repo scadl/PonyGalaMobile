@@ -7,16 +7,6 @@
 	android:gravity="top|center"
 	android:orientation="vertical">
 
-	<TextView
-		android:id="@+id/subtitle"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:paddingLeft="15dp"
-		android:paddingTop="5dp"
-		android:text="@string/subtitle"
-		android:textAlignment="viewStart"
-		android:textAppearance="?android:attr/textAppearanceMedium" />
-
 
 	<ProgressBar
 		android:id="@+id/pbWaitMain"

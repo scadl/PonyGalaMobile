@@ -12,6 +12,7 @@ import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,18 +43,16 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
 
         artWebRq.UIContext = this;
         artWebRq.regGalCb(this);
-        artWebRq.StatusUI = (TextView) findViewById(R.id.tvStatus);
         artWebRq.pbIndicator = (ProgressBar) findViewById(R.id.pbWaitGal);
 
-        TextView tv = (TextView) findViewById(R.id.tvStatus);
-        tv.setText(getText(R.string.load_start));
+        Toast.makeText(this, getText(R.string.load_start), Toast.LENGTH_SHORT);
 
-        artWebRq.execute(
-                2,
-                Integer.parseInt(
-                        getIntent().getStringExtra("catId")
-                )
-        );
+        String selDate = getIntent().getStringExtra("catDate");
+        if(selDate!=null){
+            artWebRq.execute("2", getIntent().getStringExtra("catId"), selDate);
+        } else {
+            artWebRq.execute("2", getIntent().getStringExtra("catId"));
+        }
 
     }
 

@@ -8,14 +8,6 @@
     android:orientation="vertical">
 
 
-    <TextView
-        android:id="@+id/tvStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="TextView"
-        android:textAlignment="center" />
-
     <ProgressBar
         android:id="@+id/pbWaitGal"
         style="?android:attr/progressBarStyle"

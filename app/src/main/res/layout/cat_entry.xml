@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,23 +8,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:gravity="center"
-        android:padding="5dp"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#E3E3E3"
             android:gravity="center"
-            android:orientation="vertical"
-            android:background="#E3E3E3">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imgCat1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/catImgHeight"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:scaleType="fitCenter"
@@ -35,7 +33,7 @@
                 android:id="@+id/pbCat1"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/catProgHeight"
                 android:layout_weight="1"
                 android:indeterminate="false"
                 android:max="100"
@@ -48,14 +46,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#E3E3E3"
             android:gravity="center"
-            android:orientation="vertical"
-            android:background="#E3E3E3">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imgCat2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/catImgHeight"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:scaleType="fitCenter"
@@ -66,7 +64,7 @@
                 android:id="@+id/pbCat2"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/catProgHeight"
                 android:layout_weight="1"
                 android:indeterminate="false"
                 android:max="100"
@@ -78,14 +76,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#E3E3E3"
             android:gravity="center"
-            android:orientation="vertical"
-            android:background="#E3E3E3">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imgCat3"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/catImgHeight"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:scaleType="fitCenter"
@@ -96,7 +94,7 @@
                 android:id="@+id/pbCat3"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/catProgHeight"
                 android:layout_weight="1"
                 android:indeterminate="false"
                 android:max="100"
@@ -108,14 +106,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#E3E3E3"
             android:gravity="center"
-            android:orientation="vertical"
-            android:background="#E3E3E3">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imgCat4"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/catImgHeight"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:scaleType="fitCenter"
@@ -126,7 +124,7 @@
                 android:id="@+id/pbCat4"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/catProgHeight"
                 android:layout_weight="1"
                 android:indeterminate="false"
                 android:max="100"
@@ -138,14 +136,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#E3E3E3"
             android:gravity="center"
-            android:orientation="vertical"
-            android:background="#E3E3E3">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imgCat5"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/catImgHeight"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:scaleType="fitCenter"
@@ -156,7 +154,7 @@
                 android:id="@+id/pbCat5"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/catProgHeight"
                 android:layout_weight="1"
                 android:indeterminate="false"
                 android:max="100"
@@ -166,30 +164,42 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:padding="10dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/CatName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.02"
-            android:text="@string/catName_ph"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+            android:background="@color/dimDark"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/lblSides"
+            android:paddingRight="@dimen/lblSides"
+            android:paddingTop="@dimen/lblBases"
+            android:paddingBottom="@dimen/lblBases"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/CatNum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.08"
-            android:gravity="right"
-            android:text="0"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:textColor="@android:color/darker_gray" />
-    </LinearLayout>
-</LinearLayout>
+
+            <TextView
+                android:id="@+id/CatName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.02"
+                android:text="@string/catName_ph"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium.Inverse" />
+
+            <TextView
+                android:id="@+id/CatNum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.08"
+                android:gravity="right"
+                android:text="0"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small.Inverse"
+                android:textColor="@android:color/darker_gray" />
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 
@@ -23,13 +24,14 @@ import javax.net.ssl.HttpsURLConnection;
 
 // Simple AsynctTask (other thread)
 // https://developer.android.com/reference/android/os/AsyncTask
-public class WebRequest extends AsyncTask<Integer,String,Integer> {
+public class WebRequest extends AsyncTask<String,String,Integer> {
 
     // Java callback registration
     // https://www.fandroid.info/urok-13-osnovy-java-metody-obratnogo-vyzova-callback/
 
     interface webUICatIf {
         void pCategoryListLoaded(JSONArray jArr);
+        void pSelectionDatesLoaded(JSONArray jArr);
     }
     interface webUIGalaIf{
         void pArtListLoaded(JSONArray jArr);
@@ -49,8 +51,8 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
 
     private String out;
     public Context UIContext;
-    public TextView StatusUI;
     public View pbIndicator;
+    private int toastDuration = Toast.LENGTH_SHORT;
 
     @Override
     protected void onPreExecute() {
@@ -58,7 +60,7 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
     }
 
     @Override
-    protected Integer doInBackground(Integer... inParams) {
+    protected Integer doInBackground(String... inParams) {
 
         //Android 6.0 release removes support for the Apache HTTP client.
         // If your app is using this client and targets Android 2.3 (API level 9) or higher, use the HttpURLConnection class instead.
@@ -70,12 +72,23 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
         publishProgress(UIContext.getString(R.string.load_form));
 
         try {
-            switch (inParams[0]){
+            switch (Integer.valueOf(inParams[0])){
                 case 1:
-                    getParams = "act="+inParams[0];
+                    if(inParams.length > 1){
+                        getParams = "act="+inParams[0]+"&date="+inParams[1];
+                    } else {
+                        getParams = "act="+inParams[0];
+                    }
                     break;
                 case 2:
-                    getParams = "act="+inParams[0]+"&cat_id="+inParams[1];
+                    if(inParams.length > 2) {
+                        getParams = "act=" + inParams[0] + "&cat_id=" + inParams[1]+"&date="+inParams[2];
+                    } else {
+                        getParams = "act=" + inParams[0] + "&cat_id=" + inParams[1];
+                    }
+                    break;
+                default:
+                    getParams = "act="+inParams[0];
                     break;
             }
             youServ = new URL("https://artgala.scadsdnd.net/mods/api.php?"+getParams);
@@ -120,20 +133,20 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
         }
 
 
-        return inParams[0];
+        return Integer.valueOf(inParams[0]);
     }
 
     @Override
     protected void onProgressUpdate(String... values) {
-        StatusUI.setText(values[0]);
-        //Toast.makeText(UIContext, values[0], Toast.LENGTH_SHORT/2).show();
+        //StatusUI.setText(values[0]);
+        Toast.makeText(UIContext, values[0], toastDuration).show();
         super.onProgressUpdate(values);
     }
 
     @Override
     protected void onPostExecute(Integer act) {
 
-        StatusUI.setText(UIContext.getString(R.string.load_process));
+        Toast.makeText(UIContext, UIContext.getString(R.string.load_process), toastDuration).show();
 
         try {
 
@@ -150,18 +163,21 @@ public class WebRequest extends AsyncTask<Integer,String,Integer> {
                 case 2:
                     CBGalVar.pArtListLoaded(jRows);
                     break;
+                case 4:
+                    CBCatVar.pSelectionDatesLoaded(jRows);
+                    break;
                 default:
                         Log.e("!SRV", "Unknown API request");
-                        StatusUI.setText("Unknown API request");
+                        Toast.makeText(UIContext, "Unknown API request", toastDuration).show();
                    break;
             }
 
-            StatusUI.setText(UIContext.getString(R.string.load_complete));
+            Toast.makeText(UIContext, UIContext.getString(R.string.load_complete), toastDuration).show();
             pbIndicator.setVisibility(View.GONE);
 
         } catch (Exception e) {
             e.printStackTrace();
-            StatusUI.setText(UIContext.getString(R.string.load_error));
+            Toast.makeText(UIContext, UIContext.getString(R.string.load_error), toastDuration).show();
         }
 
         super.onPostExecute(act);

@@ -10,6 +10,7 @@ import android.os.*;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,6 +37,8 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
     Boolean isAdmin = false;
     WebRequest lastCatWebRq;
     Boolean lockLoad = false;
+    String[] optData = null;
+    String selDate = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -49,11 +52,14 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
         SharedPreferences shPrf = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
         isAdmin = shPrf.getBoolean("admin_mode", false);
 
-        sectionTask().execute(1);
+        sectionTask().execute("1");
 
     }
 
     private WebRequest sectionTask(){
+
+        ProgressBar pbIndicatorElem = (ProgressBar) findViewById(R.id.pbWaitMain);
+        pbIndicatorElem.setVisibility(View.VISIBLE);
 
         if(lastCatWebRq!= null && lastCatWebRq.getStatus() != AsyncTask.Status.FINISHED) {
             lastCatWebRq.cancel(true);
@@ -63,8 +69,7 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
         catWebRq.UIContext = this;
         catWebRq.regCatCb(this);
-        catWebRq.StatusUI = (TextView) findViewById(R.id.subtitle);
-        catWebRq.pbIndicator = (ProgressBar) findViewById(R.id.pbWaitMain);
+        catWebRq.pbIndicator = pbIndicatorElem;
 
         if (catWebRq.getStatus() == AsyncTask.Status.FINISHED){
             Log.v("!!!!!!" , "Finished");
@@ -78,8 +83,9 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main,menu);
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -87,7 +93,7 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
         switch (item.getItemId()){
             case R.id.mReload:
-                sectionTask().execute(1);
+                sectionTask().execute("1");
                 break;
             case R.id.mLogin:
                 Toast.makeText(this, "Login not available now", Toast.LENGTH_SHORT).show();
@@ -108,8 +114,6 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 dlgDateTpl.setMessage(R.string.dlgDateMsg);
                 dlgDateTpl.setIcon(android.R.drawable.ic_menu_today);
 
-                String[] optData = {"Sel.1","Sel.2","Sel.3"};
-
                 ArrayAdapter<String> optAdapt = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, optData);
                 optAdapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -120,13 +124,25 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 );
                 calDate.setLayoutParams(lyParam);
                 calDate.setAdapter(optAdapt);
-                calDate.setPadding(25,5,25,5);
+                calDate.setPadding(25,5,25, (int) getResources().getDimension(R.dimen.lblSides));
+                calDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        selDate = (String) adapterView.getItemAtPosition(i);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
                 dlgDateTpl.setView(calDate);
 
                 dlgDateTpl.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        sectionTask().execute("1", selDate);
                     }
                 });
                 dlgDateTpl.setNegativeButton(this.getString(R.string.btnCancel), new DialogInterface.OnClickListener() {
@@ -228,6 +244,7 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
         listAdapter.catData = srvData;
         listAdapter.isLoadLocked = lockLoad;
 
+        OutputListVW.setDivider(null);
         OutputListVW.setAdapter(listAdapter);
 
         OutputListVW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -240,12 +257,36 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 // https://developer.android.com/training/basics/firstapp/starting-activity#java
                 Intent intGala = new Intent(parent.getContext(), GalleryActivity.class);
                 intGala.putExtra("catId", catID[position]);
+                intGala.putExtra("catDate", selDate);
                 parent.getContext().startActivity(intGala);
 
             }
         });
 
+        sectionTask().execute("4");
+
         //OutputListVW.setRecyclerListener(new );
+    }
+
+    @Override
+    public void pSelectionDatesLoaded(JSONArray jRows) {
+
+        Log.v("!","Got Selection Dates");
+
+        try {
+
+            JSONArray jData = jRows.getJSONArray(0);
+            optData = new String[jData.length()];
+
+            for (int i = 0; i < jData.length(); i++) {
+                optData[i] = jData.getString(i);
+                //Log.v("J", jData.getString(i));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
 }

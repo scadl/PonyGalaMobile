@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
 	</style>
+    <color name="dimDark">#b3000000</color>
+    <color name="bkgImage">#E3E3E3</color>
+    <dimen name="catImgHeight">110dp</dimen>
+    <dimen name="catProgHeight">30dp</dimen>
+    <dimen name="lblSides">15dp</dimen>
+    <dimen name="lblBases">3dp</dimen>
 </resources>

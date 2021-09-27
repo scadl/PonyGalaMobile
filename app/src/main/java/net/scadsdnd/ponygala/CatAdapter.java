@@ -11,21 +11,25 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.Map;
 
 public class CatAdapter extends ArrayAdapter<String> {
 
     public Map<String, String[]> catData;
     public Boolean isLoadLocked = false;
+    private List<artRequest> aL;
 
-    public CatAdapter(Context cont, String[] in_array){
+    public CatAdapter(Context cont, String[] in_array, List<artRequest> aLIn){
         super(cont, R.layout.cat_entry, in_array);
+        this.aL = aLIn;
     }
 
     public View getView(int pos, View contVw, ViewGroup vG){
 
         View view = new View(getContext());
 
+        // Prevent showing empty categories
         if (Integer.valueOf(this.catData.get("counters")[pos])>0) {
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -66,6 +70,7 @@ public class CatAdapter extends ArrayAdapter<String> {
                     catData.get("img_3")[pos],
                     catData.get("img_4")[pos]
             );
+            aL.add(utilAg);
 
             //notifyDataSetChanged();
 

@@ -1,7 +1,5 @@
 package net.scadsdnd.ponygala;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -10,13 +8,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -74,8 +68,10 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
 
         } catch (IOException e) {
             Log.e("IO_ERR", e.toString());
+            cancel(true);
         } catch (Exception e) {
             Log.e("IMG_ERR", e.toString());
+            cancel(true);
         }
 
         return bmImage;
@@ -87,8 +83,10 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
         this.maxOutputs = outputImgView.length;
 
         for (int i=0; i < this.maxOutputs; i++) {
-            outputProgress[i].setIndeterminate(true);
-            outputProgress[i].setMax(100);
+            if(outputProgress[i]!=null) {
+                outputProgress[i].setIndeterminate(true);
+                outputProgress[i].setMax(100);
+            }
         }
 
         super.onPreExecute();
@@ -109,14 +107,13 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
 
                     Bitmap tempImage = loadImageCore(in_url[i], i);
 
-                    // Will hold retry download until image loaded
+                    // Will retry download until image loaded successfully
                     while (tempImage == null) {
                         tempImage = loadImageCore(in_url[i], i);
                         Log.v("RELOAD", "Reload started");
                     } // retry end
 
                     bmImage[i] = tempImage;
-
 
                 } else {
                     bmImage[i] = loadImageCore(in_url[i], i);
@@ -131,8 +128,10 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
 
     @Override
     protected void onProgressUpdate(Integer... values) {
-        outputProgress[values[0]].setIndeterminate(values[1] == 0);
-        outputProgress[values[0]].setProgress(values[2]);
+        if(outputProgress[values[0]]!=null) {
+            outputProgress[values[0]].setIndeterminate(values[1] == 0);
+            outputProgress[values[0]].setProgress(values[2]);
+        }
         super.onProgressUpdate(values);
     }
 
@@ -140,10 +139,14 @@ public class artRequest extends AsyncTask<String, Integer, Bitmap[]> {
     protected void onPostExecute(Bitmap[] bitmap) {
         for (int i=0; i < this.maxOutputs; i++) {
             if(bitmap[i]!=null){
-                outputImgView[i].setImageBitmap(bitmap[i]);
-                outputImgView[i].setScaleType(scaleType);
+                if(outputImgView[i]!=null) {
+                    outputImgView[i].setImageBitmap(bitmap[i]);
+                    outputImgView[i].setScaleType(scaleType);
+                }
             }
-            outputProgress[i].setVisibility(View.GONE);
+            if(outputProgress[i]!=null) {
+                outputProgress[i].setVisibility(View.GONE);
+            }
         }
         super.onPostExecute(bitmap);
     }

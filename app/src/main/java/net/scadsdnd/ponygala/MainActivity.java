@@ -27,7 +27,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends Activity implements WebRequest.webUICatIf
@@ -39,6 +41,7 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
     Boolean lockLoad = false;
     String[] optData = null;
     String selDate = null;
+    List<artRequest> asyncList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -71,10 +74,6 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
         catWebRq.regCatCb(this);
         catWebRq.pbIndicator = pbIndicatorElem;
 
-        if (catWebRq.getStatus() == AsyncTask.Status.FINISHED){
-            Log.v("!!!!!!" , "Finished");
-        }
-
         lastCatWebRq = catWebRq;
 
         return catWebRq;
@@ -96,7 +95,11 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 sectionTask().execute("1");
                 break;
             case R.id.mLogin:
-                Toast.makeText(this, "Login not available now", Toast.LENGTH_SHORT).show();
+                try {
+                    Toast.makeText(this, "Login not available now", Toast.LENGTH_SHORT).show();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
             case R.id.mExit:
                 finish();
@@ -164,13 +167,21 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
     public void onBackPressed() {
         //super.onBackPressed();
 
+        for (int i=0; i< asyncList.size(); i++ ) {
+            asyncList.get(i).cancel(true);
+        }
+
         lvl-=1;
         switch (lvl){
             case -1:
-                Toast.makeText(
-                        MainActivity.this,
-                        this.getString(R.string.exitConfirm),
-                        Toast.LENGTH_LONG).show();
+                try {
+                    Toast.makeText(
+                            MainActivity.this,
+                            this.getString(R.string.exitConfirm),
+                            Toast.LENGTH_LONG).show();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
             case -2:
                 finish();
@@ -233,14 +244,13 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
             srvData.put("img_"+j, catThumbs[j]);
         }
 
-
         // https://developer.android.com/reference/android/widget/ListView
         //ArrayAdapter<String> myAdapt = new ArrayAdapter<String>(UIContext, android.R.layout.simple_list_item_1, catName);
         //OutputView.setAdapter(myAdapt);
 
         ListView OutputListVW = (ListView) findViewById(R.id.catListView);
 
-        CatAdapter listAdapter = new CatAdapter(this, catName);
+        CatAdapter listAdapter = new CatAdapter(this, catName, asyncList);
         listAdapter.catData = srvData;
         listAdapter.isLoadLocked = lockLoad;
 
@@ -251,7 +261,16 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Toast.makeText(parent.getContext(), "db_id:" + catID[position], Toast.LENGTH_SHORT).show();
+                try {
+                    Toast.makeText(parent.getContext(), "db_id:" + catID[position], Toast.LENGTH_SHORT).show();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                // Prevent execution of async tasks, after activity closed
+                for (int i=0; i< asyncList.size(); i++ ) {
+                    asyncList.get(i).cancel(true);
+                }
 
                 // Creating new activity on click
                 // https://developer.android.com/training/basics/firstapp/starting-activity#java

@@ -1,10 +1,12 @@
 package net.scadsdnd.ponygala;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,10 +54,11 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
     private String out;
     public Context UIContext;
     public View pbIndicator;
-    private int toastDuration = Toast.LENGTH_SHORT;
+    private int toastDuration;
 
     @Override
     protected void onPreExecute() {
+        toastDuration = 0;
         super.onPreExecute();
     }
 
@@ -139,14 +142,22 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
     @Override
     protected void onProgressUpdate(String... values) {
         //StatusUI.setText(values[0]);
-        Toast.makeText(UIContext, values[0], toastDuration).show();
+        try{
+            //Toast.makeText(UIContext, values[0], toastDuration).show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         super.onProgressUpdate(values);
     }
 
     @Override
     protected void onPostExecute(Integer act) {
 
-        Toast.makeText(UIContext, UIContext.getString(R.string.load_process), toastDuration).show();
+        try {
+            //Toast.makeText(UIContext, UIContext.getString(R.string.load_process), toastDuration).show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         try {
 
@@ -168,16 +179,31 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
                     break;
                 default:
                         Log.e("!SRV", "Unknown API request");
-                        Toast.makeText(UIContext, "Unknown API request", toastDuration).show();
+                        try {
+                            //Toast.makeText(UIContext, "Unknown API request", toastDuration).show();
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+
                    break;
             }
 
-            Toast.makeText(UIContext, UIContext.getString(R.string.load_complete), toastDuration).show();
+            try {
+                //Toast.makeText(UIContext, UIContext.getString(R.string.load_complete), toastDuration).show();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
             pbIndicator.setVisibility(View.GONE);
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(UIContext, UIContext.getString(R.string.load_error), toastDuration).show();
+            try {
+                //Toast.makeText(UIContext, UIContext.getString(R.string.load_error), toastDuration).show();
+            } catch (Exception e2){
+                e2.printStackTrace();
+            }
+
         }
 
         super.onPostExecute(act);

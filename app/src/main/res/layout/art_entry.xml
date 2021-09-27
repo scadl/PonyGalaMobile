@@ -14,8 +14,9 @@
         <ImageView
             android:id="@+id/artTumbVw"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="110dp"
             android:layout_weight="1"
+            android:scaleType="centerCrop"
             android:src="@android:drawable/ic_popup_sync" />
 
         <ProgressBar
@@ -26,7 +27,8 @@
             android:layout_weight="1"
             android:indeterminate="false"
             android:max="100"
-            android:progress="0" />
+            android:progress="0"
+            android:padding="5dp"/>
     </LinearLayout>
 
     <android.support.constraint.ConstraintLayout

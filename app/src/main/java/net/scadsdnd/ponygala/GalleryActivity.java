@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
@@ -27,6 +28,7 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
 
     caheDB dbh;
     SQLiteDatabase db;
+    List<artRequest> asyncThumbs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +36,10 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
         dbh = new caheDB(this);
         db = dbh.getWritableDatabase();
 
-        dbh.onUpgrade(db, 0, 0);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery);
+
+        //Toast.makeText(this, getText(R.string.load_start), Toast.LENGTH_SHORT);
 
         WebRequest artWebRq = new WebRequest();
 
@@ -45,14 +47,16 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
         artWebRq.regGalCb(this);
         artWebRq.pbIndicator = (ProgressBar) findViewById(R.id.pbWaitGal);
 
-        Toast.makeText(this, getText(R.string.load_start), Toast.LENGTH_SHORT);
+        dbh.onUpgrade(db, 0, 0);
 
-        String selDate = getIntent().getStringExtra("catDate");
-        if(selDate!=null){
-            artWebRq.execute("2", getIntent().getStringExtra("catId"), selDate);
-        } else {
-            artWebRq.execute("2", getIntent().getStringExtra("catId"));
-        }
+
+            String selDate = getIntent().getStringExtra("catDate");
+            if (selDate != null) {
+                artWebRq.execute("2", getIntent().getStringExtra("catId"), selDate);
+            } else {
+                artWebRq.execute("2", getIntent().getStringExtra("catId"));
+            }
+
 
     }
 
@@ -100,23 +104,39 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
         artData.put("art_name", artName);
         artData.put("art_tb", artThumb);
 
-        GridView outGridVW = (GridView) findViewById(R.id.gvArts);
-        ListAdapter grAdapt = new artAdapter(this, artName, artData);
-        outGridVW.setAdapter(grAdapt);
+        try{
 
-        outGridVW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            GridView outGridVW = (GridView) findViewById(R.id.gvArts);
+            ListAdapter grAdapt = new artAdapter(this, artName, artData, asyncThumbs);
+            outGridVW.setAdapter(grAdapt);
 
-                Intent intFull = new Intent(adapterView.getContext(), ImageActivity.class);
-                intFull.putExtra("imgMaxInd", artName.length);
-                intFull.putExtra("imgIndex", position);
-                //intFull.putStringArrayListExtra("imgFull", bFull);
-                //intFull.putStringArrayListExtra("imgTitle", bName);
-                //intFull.putStringArrayListExtra("imgAuthor", bAuth);
-                adapterView.getContext().startActivity(intFull);
+            outGridVW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            }
-        });
+                    // Prevent execution of async tasks, after activity closed
+                    for (int i=0; i<asyncThumbs.size(); i++  ) {
+                        asyncThumbs.get(i).cancel(true);
+                    }
+
+                    Intent intFull = new Intent(parent.getContext(), ImageActivity.class);
+                    intFull.putExtra("imgMaxInd", artName.length);
+                    intFull.putExtra("imgIndex", position);
+                    parent.getContext().startActivity(intFull);
+
+                }
+            });
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        for (int i=0; i<asyncThumbs.size(); i++  ) {
+            asyncThumbs.get(i).cancel(true);
+        }
+        super.onBackPressed();
     }
 }

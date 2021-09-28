@@ -17,11 +17,20 @@
     <string name="mSelDate">Выбрать дату подборки</string>
     <string name="mLockLoad">Ожидать загрузки миниатюр</string>
     <string name="mReload">Перезагрузить страницу</string>
-    <string name="mLogin">Администрирование</string>
+    <string name="mLogin">Администр. вход</string>
+    <string name="mLogout">Администр. выход</string>
     <string name="mExit">Выход из программы</string>
+    <string name="mMove">Перместить выбраное</string>
+    <string name="mDelete">Удалить выбраное</string>
+    <string name="mMoveArt">Перместить арт</string>
+    <string name="mDeleteArt">Удалить арт</string>
+    <string name="mRenCat">Переименовать категорию</string>
+    <string name="mDelCat">Удалить категорию</string>
+    <string name="mAddCat">Добавить категорию</string>
     <string name="btnCancel">Отмена</string>
-    <string name="dlgDateTitle">Дата подборки</string>
-    <string name="dlgDateMsg">Выберите дату публикации подборки</string>
+    <string name="dlgDateTitle">Выбор подборки</string>
+    <string name="dlgNewCatTitle">Новая категория</string>
+    <string name="dlgAdminPassTitle">Пароль админ.</string>
     <string name="exitConfirm">Нажмите ещё раз \'Назад\', чтобы выйти</string>
 
 </resources>

@@ -18,11 +18,11 @@ public class CatAdapter extends ArrayAdapter<String> {
 
     public Map<String, String[]> catData;
     public Boolean isLoadLocked = false;
-    private List<artRequest> aL;
+    public List<artRequest> aL;
+    public boolean adminMode;
 
-    public CatAdapter(Context cont, String[] in_array, List<artRequest> aLIn){
+    public CatAdapter(Context cont, String[] in_array){
         super(cont, R.layout.cat_entry, in_array);
-        this.aL = aLIn;
     }
 
     public View getView(int pos, View contVw, ViewGroup vG){
@@ -30,7 +30,7 @@ public class CatAdapter extends ArrayAdapter<String> {
         View view = new View(getContext());
 
         // Prevent showing empty categories
-        if (Integer.valueOf(this.catData.get("counters")[pos])>0) {
+        if (Integer.valueOf(this.catData.get("counters")[pos]) > 0 || adminMode) {
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
             view = inflater.inflate(R.layout.cat_entry, vG, false);

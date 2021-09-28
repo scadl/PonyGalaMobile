@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/mMoveFull"
+        android:title="@string/mMoveArt"
+        android:visible="false" />
+    <item
+        android:id="@+id/mDeleteFull"
+        android:title="@string/mDeleteArt"
+        android:visible="false" />
+    <item
         android:id="@+id/mReloadFull"
-        android:title="@string/mReload" />
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:title="@string/mReload"
+        app:showAsAction="ifRoom"/>
 </menu>

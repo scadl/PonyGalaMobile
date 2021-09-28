@@ -5,7 +5,11 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -26,9 +30,26 @@ import java.util.Map;
 
 public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf {
 
-    caheDB dbh;
-    SQLiteDatabase db;
-    List<artRequest> asyncThumbs = new ArrayList<>();
+    private caheDB dbh;
+    private SQLiteDatabase db;
+    private List<artRequest> asyncThumbs = new ArrayList<>();
+    private boolean isAdmin;
+
+    private void loadCategory(){
+
+        WebRequest artWebRq = new WebRequest();
+
+        artWebRq.UIContext = this;
+        artWebRq.regGalCb(this);
+        artWebRq.pbIndicator = (ProgressBar) findViewById(R.id.pbWaitGal);
+
+        String selDate = getIntent().getStringExtra("catDate");
+        if (selDate != null) {
+            artWebRq.execute("2", getIntent().getStringExtra("catId"), selDate);
+        } else {
+            artWebRq.execute("2", getIntent().getStringExtra("catId"));
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,24 +60,13 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery);
 
-        //Toast.makeText(this, getText(R.string.load_start), Toast.LENGTH_SHORT);
+        isAdmin = getIntent().getBooleanExtra("isAdmin", false);
 
-        WebRequest artWebRq = new WebRequest();
+        Toast.makeText(this, getText(R.string.load_start), Toast.LENGTH_LONG);
 
-        artWebRq.UIContext = this;
-        artWebRq.regGalCb(this);
-        artWebRq.pbIndicator = (ProgressBar) findViewById(R.id.pbWaitGal);
+        loadCategory();
 
         dbh.onUpgrade(db, 0, 0);
-
-
-            String selDate = getIntent().getStringExtra("catDate");
-            if (selDate != null) {
-                artWebRq.execute("2", getIntent().getStringExtra("catId"), selDate);
-            } else {
-                artWebRq.execute("2", getIntent().getStringExtra("catId"));
-            }
-
 
     }
 
@@ -122,6 +132,7 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
                     Intent intFull = new Intent(parent.getContext(), ImageActivity.class);
                     intFull.putExtra("imgMaxInd", artName.length);
                     intFull.putExtra("imgIndex", position);
+                    intFull.putExtra("isAdmin", isAdmin);
                     parent.getContext().startActivity(intFull);
 
                 }
@@ -138,5 +149,35 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
             asyncThumbs.get(i).cancel(true);
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.galary, menu);
+
+        if (isAdmin){
+            menu.findItem(R.id.mRenCat).setVisible(true);
+            menu.findItem(R.id.mDelCat).setVisible(true);
+            menu.findItem(R.id.mMoveGala).setVisible(true);
+            menu.findItem(R.id.mDelGala).setVisible(true);
+        } else {
+            menu.findItem(R.id.mRenCat).setVisible(false);
+            menu.findItem(R.id.mDelCat).setVisible(false);
+            menu.findItem(R.id.mMoveGala).setVisible(false);
+            menu.findItem(R.id.mDelGala).setVisible(false);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mReloadGala:
+                loadCategory();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

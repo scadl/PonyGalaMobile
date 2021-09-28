@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -35,13 +36,16 @@ import java.util.Map;
 public class MainActivity extends Activity implements WebRequest.webUICatIf
 {
 
-    Integer lvl = 0;
-    Boolean isAdmin = false;
-    WebRequest lastCatWebRq;
-    Boolean lockLoad = false;
-    String[] optData = null;
-    String selDate = null;
-    List<artRequest> asyncList = new ArrayList<>();
+    private Integer lvl = 0;
+    private Boolean isAdmin;
+    private WebRequest lastCatWebRq;
+    private Boolean lockLoad = false;
+    private String[] optData = null;
+    private String selDate = null;
+    private List<artRequest> asyncList = new ArrayList<>();
+    private SharedPreferences shPrf;
+    private MenuItem mAddCat, mLogout, mLogin;
+    private enum dialogTypes { dateSlection, newCatName, adminPass }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -49,20 +53,23 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        StrictMode.ThreadPolicy mypolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(mypolicy);
+        StrictMode.ThreadPolicy myPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(myPolicy);
 
-        SharedPreferences shPrf = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
+        shPrf = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
         isAdmin = shPrf.getBoolean("admin_mode", false);
 
-        sectionTask().execute("1");
+        sectionTask(true).execute("1");
 
     }
 
-    private WebRequest sectionTask(){
+    private WebRequest sectionTask(boolean showIndicator){
 
         ProgressBar pbIndicatorElem = (ProgressBar) findViewById(R.id.pbWaitMain);
-        pbIndicatorElem.setVisibility(View.VISIBLE);
+
+        if(showIndicator) {
+            pbIndicatorElem.setVisibility(View.VISIBLE);
+        }
 
         if(lastCatWebRq!= null && lastCatWebRq.getStatus() != AsyncTask.Status.FINISHED) {
             lastCatWebRq.cancel(true);
@@ -82,24 +89,63 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+
+        mAddCat = menu.findItem(R.id.mAddCat);
+        mLogout = menu.findItem(R.id.mLogout);
+        mLogin= menu.findItem(R.id.mLogin);
+
+        if(isAdmin){
+            mLogin.setVisible(false);
+            mLogout.setVisible(true);
+            mAddCat.setVisible(true);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        SharedPreferences.Editor prfEditor = shPrf.edit();
+
         switch (item.getItemId()){
             case R.id.mReload:
-                sectionTask().execute("1");
+                sectionTask(true).execute("1");
                 break;
             case R.id.mLogin:
-                try {
-                    Toast.makeText(this, "Login not available now", Toast.LENGTH_SHORT).show();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
+
+                myDialog(dialogTypes.adminPass);
+
+                // --------------------- TEMP
+
+                Toast.makeText(this, "You are admin", Toast.LENGTH_SHORT).show();
+
+                prfEditor.putBoolean("admin_mode", true);
+                prfEditor.commit();
+
+                isAdmin = true;
+
+                mLogin.setVisible(false);
+                mLogout.setVisible(true);
+                mAddCat.setVisible(true);
+
+                break;
+            case R.id.mLogout:
+
+                Toast.makeText(this, "You are visitor", Toast.LENGTH_SHORT).show();
+
+                prfEditor.putBoolean("admin_mode", false);
+                prfEditor.commit();
+
+                isAdmin = false;
+
+                mLogin.setVisible(true);
+                mLogout.setVisible(false);
+                mAddCat.setVisible(false);
+
                 break;
             case R.id.mExit:
                 finish();
@@ -112,10 +158,30 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 break;
             case R.id.mSelDate:
 
-                final AlertDialog.Builder dlgDateTpl = new AlertDialog.Builder(this);
-                dlgDateTpl.setTitle(R.string.dlgDateTitle);
-                dlgDateTpl.setMessage(R.string.dlgDateMsg);
-                dlgDateTpl.setIcon(android.R.drawable.ic_menu_today);
+                myDialog(dialogTypes.dateSlection);
+
+                break;
+
+            case R.id.mAddCat:
+
+                myDialog(dialogTypes.newCatName);
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void myDialog(final dialogTypes dialogT){
+
+        int dTitle = 0;
+        int dIcon = 0;
+        View dCont = null;
+
+        switch (dialogT){
+            case dateSlection:
+                dTitle = R.string.dlgDateTitle;
+                dIcon = android.R.drawable.ic_menu_today;
 
                 ArrayAdapter<String> optAdapt = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, optData);
                 optAdapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -127,7 +193,8 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 );
                 calDate.setLayoutParams(lyParam);
                 calDate.setAdapter(optAdapt);
-                calDate.setPadding(25,5,25, (int) getResources().getDimension(R.dimen.lblSides));
+                calDate.setPadding(25,(int) getResources().getDimension(R.dimen.lblSides),
+                        25, (int) getResources().getDimension(R.dimen.lblSides));
                 calDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -140,27 +207,88 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                     }
                 });
 
-                dlgDateTpl.setView(calDate);
+                dCont = calDate;
 
-                dlgDateTpl.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        sectionTask().execute("1", selDate);
-                    }
-                });
-                dlgDateTpl.setNegativeButton(this.getString(R.string.btnCancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-                AlertDialog dlgDate = dlgDateTpl.create();
-                dlgDate.show();
+                break;
+            case newCatName:
+
+                dTitle = R.string.dlgNewCatTitle;
+                dIcon = android.R.drawable.ic_menu_add;
+
+                final EditText edtCat = new EditText(MainActivity.this);
+                LinearLayout.LayoutParams lpC = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                );
+                edtCat.setPadding(25,(int) getResources().getDimension(R.dimen.lblSides),
+                        25, (int) getResources().getDimension(R.dimen.lblSides));
+                edtCat.setLayoutParams(lpC);
+
+                dCont = edtCat;
+
+                break;
+            case adminPass:
+
+                dTitle = R.string.dlgAdminPassTitle;
+                dIcon = android.R.drawable.ic_menu_myplaces;
+
+                final EditText edtPass = new EditText(MainActivity.this);
+                LinearLayout.LayoutParams lpP = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                );
+                edtPass.setPadding(25,(int) getResources().getDimension(R.dimen.lblSides),
+                        25, (int) getResources().getDimension(R.dimen.lblSides));
+                edtPass.setLayoutParams(lpP);
+
+                dCont = edtPass;
+
+                break;
+            default:
 
                 break;
         }
 
-        return super.onOptionsItemSelected(item);
+        final AlertDialog.Builder dlgDateTpl = new AlertDialog.Builder(this);
+        dlgDateTpl.setTitle(dTitle);
+        dlgDateTpl.setIcon(dIcon);
+
+        dlgDateTpl.setView(dCont);
+
+        final TextView finalDCont = (TextView) dCont;
+        dlgDateTpl.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                switch (dialogT){
+                    case dateSlection:
+                        sectionTask(true).execute("1", selDate);
+                        break;
+                    case adminPass:
+                        sectionTask(false).execute("10", finalDCont.getText().toString());
+                        break;
+                    case newCatName:
+                        sectionTask(false).execute("5", finalDCont.getText().toString());
+                        if(selDate!=null) {
+                            sectionTask(true).execute("1", selDate);
+                        } else {
+                            sectionTask(true).execute("1");
+                        }
+                        break;
+                }
+
+            }
+        });
+        dlgDateTpl.setNegativeButton(this.getString(R.string.btnCancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog dlgDate = dlgDateTpl.create();
+        dlgDate.show();
+
     }
 
     @Override
@@ -250,9 +378,11 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
         ListView OutputListVW = (ListView) findViewById(R.id.catListView);
 
-        CatAdapter listAdapter = new CatAdapter(this, catName, asyncList);
+        CatAdapter listAdapter = new CatAdapter(this, catName);
         listAdapter.catData = srvData;
         listAdapter.isLoadLocked = lockLoad;
+        listAdapter.aL = asyncList;
+        listAdapter.adminMode = isAdmin;
 
         OutputListVW.setDivider(null);
         OutputListVW.setAdapter(listAdapter);
@@ -277,12 +407,13 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 Intent intGala = new Intent(parent.getContext(), GalleryActivity.class);
                 intGala.putExtra("catId", catID[position]);
                 intGala.putExtra("catDate", selDate);
+                intGala.putExtra("isAdmin", isAdmin);
                 parent.getContext().startActivity(intGala);
 
             }
         });
 
-        sectionTask().execute("4");
+        sectionTask(true).execute("4");
 
         //OutputListVW.setRecyclerListener(new );
     }

@@ -7,12 +7,12 @@
         android:checkable="true"
         android:icon="@android:drawable/ic_menu_report_image"
         android:title="@string/mLockLoad"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/mSelDate"
         android:icon="@android:drawable/ic_menu_today"
         android:title="@string/mSelDate"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 
     <item
@@ -24,13 +24,24 @@
     <item
         android:id="@+id/mExit"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:title="@string/mExit"
-        app:showAsAction="ifRoom" />
+        android:title="@string/mExit" />
+
     <item
         android:id="@+id/mLogin"
         android:icon="@android:drawable/ic_menu_manage"
-        android:title="@string/mLogin"
-        app:showAsAction="ifRoom" />
+        android:title="@string/mLogin" />
+
+    <item
+        android:id="@+id/mLogout"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="@string/mLogout"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/mAddCat"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/mAddCat"
+        android:visible="false"/>
 
 
 

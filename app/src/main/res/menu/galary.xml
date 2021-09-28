@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mRenCat"
+        android:title="@string/mRenCat"
+        android:visible="false" />
+    <item
+        android:id="@+id/mDelCat"
+        android:title="@string/mDelCat"
+        android:visible="false" />
+    <item
+        android:id="@+id/mMoveGala"
+        android:title="@string/mMove"
+        android:visible="false" />
+    <item
+        android:id="@+id/mDelGala"
+        android:title="@string/mDelete"
+        android:visible="false" />
+    <item
+        android:id="@+id/mReloadGala"
+        android:title="@string/mReload"
+        android:icon="@android:drawable/ic_menu_rotate"
+        app:showAsAction="ifRoom"/>
+</menu>

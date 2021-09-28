@@ -34,11 +34,12 @@ public class ImageActivity extends Activity {
     private caheDB dbh;
     private SQLiteDatabase db;
 
+    private boolean isAdmin;
 
-    private static final String TAG = "MainActivity";
     private float mScale = 1f;
     private ScaleGestureDetector mScaleGestureDetector;
-    GestureDetector gestureDetector;
+    private GestureDetector gestureDetector;
+
 
 
 
@@ -88,6 +89,7 @@ public class ImageActivity extends Activity {
 
         index = getIntent().getIntExtra("imgIndex", 0);
         max_index = getIntent().getIntExtra("imgMaxInd", 0);
+        isAdmin = getIntent().getBooleanExtra("isAdmin", false);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_full);
@@ -114,35 +116,6 @@ public class ImageActivity extends Activity {
                     index--;
                     loadImage(index);
                 }
-            }
-        });
-
-        ImageButton btnReload = (ImageButton) findViewById(R.id.btnReload);
-        btnReload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadImage(index);
-            }
-        });
-
-        ImageButton btnFit = (ImageButton) findViewById(R.id.btnFit);
-        btnFit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                ImageView ivLoad = (ImageView) findViewById(R.id.ivFull);
-                //ivLoad
-
-                /*
-                if(ivLoad.getScaleType() == ImageView.ScaleType.FIT_CENTER) {
-
-                    ivLoad.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                } else {
-                    ivLoad.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                }
-
-                 */
-
             }
         });
 
@@ -209,6 +182,15 @@ public class ImageActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.full, menu);
+
+        if(isAdmin){
+            menu.findItem(R.id.mMoveFull).setVisible(true);
+            menu.findItem(R.id.mDeleteFull).setVisible(true);
+        } else {
+            menu.findItem(R.id.mMoveFull).setVisible(false);
+            menu.findItem(R.id.mDeleteFull).setVisible(false);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 

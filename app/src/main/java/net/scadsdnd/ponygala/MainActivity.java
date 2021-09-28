@@ -63,7 +63,29 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
     }
 
-    private WebRequest sectionTask(boolean showIndicator){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+                boolean catChanged = data.getBooleanExtra("catChanged", false);
+                if(catChanged){
+                    if(selDate!=null) {
+                        sectionTask(true).execute("1", selDate);
+                    } else {
+                        sectionTask(true).execute("1");
+                    }
+                }
+            }
+        }
+    }
+
+    public WebRequest sectionTask(boolean showIndicator){
+
+        // Prevent execution of async tasks, after activity closed
+        for (int i=0; i< asyncList.size(); i++ ) {
+            asyncList.get(i).cancel(true);
+        }
 
         ProgressBar pbIndicatorElem = (ProgressBar) findViewById(R.id.pbWaitMain);
 
@@ -132,6 +154,12 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 mLogout.setVisible(true);
                 mAddCat.setVisible(true);
 
+                if(selDate!=null) {
+                    sectionTask(true).execute("1", selDate);
+                } else {
+                    sectionTask(true).execute("1");
+                }
+
                 break;
             case R.id.mLogout:
 
@@ -145,6 +173,12 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 mLogin.setVisible(true);
                 mLogout.setVisible(false);
                 mAddCat.setVisible(false);
+
+                if(selDate!=null) {
+                    sectionTask(true).execute("1", selDate);
+                } else {
+                    sectionTask(true).execute("1");
+                }
 
                 break;
             case R.id.mExit:
@@ -268,12 +302,8 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                         sectionTask(false).execute("10", finalDCont.getText().toString());
                         break;
                     case newCatName:
+                        Toast.makeText(MainActivity.this, R.string.load_proc, Toast.LENGTH_LONG).show();
                         sectionTask(false).execute("5", finalDCont.getText().toString());
-                        if(selDate!=null) {
-                            sectionTask(true).execute("1", selDate);
-                        } else {
-                            sectionTask(true).execute("1");
-                        }
                         break;
                 }
 
@@ -408,7 +438,7 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 intGala.putExtra("catId", catID[position]);
                 intGala.putExtra("catDate", selDate);
                 intGala.putExtra("isAdmin", isAdmin);
-                parent.getContext().startActivity(intGala);
+                startActivityForResult(intGala, 1);
 
             }
         });
@@ -439,4 +469,26 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
     }
 
+    @Override
+    public void pCategoryAdded(JSONArray jArr) {
+
+        Log.v("!","Category added");
+
+        try {
+
+            JSONObject jData = jArr.getJSONObject(0);
+            //jData.getString("result");
+            Log.v("J", jData.getString("result"));
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if(selDate!=null) {
+            sectionTask(true).execute("1", selDate);
+        } else {
+            sectionTask(true).execute("1");
+        }
+
+    }
 }

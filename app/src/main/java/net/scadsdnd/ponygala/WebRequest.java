@@ -34,9 +34,14 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
     interface webUICatIf {
         void pCategoryListLoaded(JSONArray jArr);
         void pSelectionDatesLoaded(JSONArray jArr);
+        void pCategoryAdded(JSONArray jArr);
     }
     interface webUIGalaIf{
         void pArtListLoaded(JSONArray jArr);
+        void pCatRenamed(JSONArray jArr);
+        void pCatDeleted(JSONArray jArr);
+        void pArtsMoved(JSONArray jArr);
+        void pArtsDeleted(JSONArray jArr);
     }
 
     private webUICatIf CBCatVar;
@@ -70,31 +75,66 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
         // https://developer.android.com/about/versions/marshmallow/android-6.0-changes
 
         URL youServ = null;
-        String getParams = null;
+        String getParams = "act="+inParams[0];
 
         publishProgress(UIContext.getString(R.string.load_form));
 
         try {
             switch (Integer.valueOf(inParams[0])){
                 case 1:
+                    // Get categories list + 5 thumbs each + arts count each (with date, if any)
                     if(inParams.length > 1){
-                        getParams = "act="+inParams[0]+"&date="+inParams[1];
-                    } else {
-                        getParams = "act="+inParams[0];
+                        getParams += "&date="+inParams[1];
                     }
                     break;
                 case 2:
+                    // Get arts in category (with date, if any)
                     if(inParams.length > 2) {
-                        getParams = "act=" + inParams[0] + "&cat_id=" + inParams[1]+"&date="+inParams[2];
+                        getParams += "&cat_id=" + inParams[1]+"&date="+inParams[2];
                     } else {
-                        getParams = "act=" + inParams[0] + "&cat_id=" + inParams[1];
+                        getParams += "&cat_id=" + inParams[1];
                     }
                     break;
+
+                case 3:
+                    // Get 5 thumbs for category only (with date, if any)
+                    // Not used now
+                    break;
+
+                case 4:
+                    // Get publication dates list
+                    // No additional params needed
+                    break;
+                case 5:
+                    // Add a new category
+                    getParams += "&newCat=" + inParams[1];
+                    break;
+                case 6:
+                    // Rename existing category
+                    getParams += "&newName=" + inParams[1]+"&catid="+inParams[2];
+                    break;
+                case 7:
+                    // Delete existing category (and arts to buffer)
+                    getParams += "&catid="+inParams[1];
+                    break;
+                case 8:
+                    // Move art to new category
+                    getParams += "&aid="+inParams[1]+"&cat="+inParams[2]+"&date="+inParams[3]+"&dateupd=false";
+                    break;
+                case 9:
+                    // Delete art from system
+                    getParams += "&aid="+inParams[1];
+                    break;
+                case 10:
+                    // Check admin password
+                    getParams += "&pass"+inParams[1];
+                    break;
                 default:
-                    getParams = "act="+inParams[0];
+
                     break;
             }
             youServ = new URL("https://artgala.scadsdnd.net/mods/api.php?"+getParams);
+            Log.v("ATR!", youServ.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
             publishProgress(UIContext.getString(R.string.load_error));
@@ -144,6 +184,7 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
         //StatusUI.setText(values[0]);
         try{
             //Toast.makeText(UIContext, values[0], toastDuration).show();
+            Log.i("ATP!", values[0]);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -177,6 +218,22 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
                 case 4:
                     CBCatVar.pSelectionDatesLoaded(jRows);
                     break;
+                case 5:
+                    CBCatVar.pCategoryAdded(jRows);
+                    break;
+                case 6:
+                    CBGalVar.pCatRenamed(jRows);
+                    break;
+                case 7:
+                    CBGalVar.pCatDeleted(jRows);
+                    break;
+                case 8:
+                    CBGalVar.pArtsMoved(jRows);
+                    break;
+                case 9:
+                    CBGalVar.pArtsDeleted(jRows);
+                    break;
+
                 default:
                         Log.e("!SRV", "Unknown API request");
                         try {

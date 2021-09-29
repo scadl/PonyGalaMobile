@@ -30,7 +30,9 @@ public class CatAdapter extends ArrayAdapter<String> {
         View view = new View(getContext());
 
         // Prevent showing empty categories
-        if (Integer.valueOf(this.catData.get("counters")[pos]) > 0 || adminMode) {
+        if (
+                (Integer.valueOf(this.catData.get("counters")[pos]) > 0
+                        && Integer.valueOf(this.catData.get("ids")[pos]) != 1) || adminMode) {
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
             view = inflater.inflate(R.layout.cat_entry, vG, false);

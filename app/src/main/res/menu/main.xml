@@ -7,19 +7,18 @@
         android:checkable="true"
         android:icon="@android:drawable/ic_menu_report_image"
         android:title="@string/mLockLoad"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/mSelDate"
         android:icon="@android:drawable/ic_menu_today"
         android:title="@string/mSelDate"
-        app:showAsAction="ifRoom" />
-
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/mReload"
         android:icon="@android:drawable/ic_menu_rotate"
         android:title="@string/mReload"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/mExit"

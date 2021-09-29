@@ -7,19 +7,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,12 +36,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf {
+public class GalleryActivity extends AppCompatActivity implements WebRequest.webUIGalaIf {
 
     private caheDB dbh;
     private SQLiteDatabase db;
     private List<artRequest> asyncThumbs = new ArrayList<>();
     private boolean isAdmin;
+    private String[] catNames = null;
+    private String[] catIDs = null;
+    private int selCatIDInd;
+    private enum myGalaDialogType {CatRename, ArtsMove}
+    private int adminOperCount = 0;
 
     private void loadCategory(int act, String... params){
 
@@ -51,6 +60,7 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
         String catId = getIntent().getStringExtra("catId");
         switch (act) {
             case 2:
+                // Get arts in category (with date, if any)
                 if (selDate != null) {
                     artWebRq.execute(String.valueOf(act), catId, selDate);
                 } else {
@@ -58,10 +68,26 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
                 }
             break;
             case 6:
+                // Rename existing category
                 artWebRq.execute(String.valueOf(act), params[0], catId);
                 break;
             case 7:
+                // Delete existing category (and arts to buffer)
                 artWebRq.execute(String.valueOf(act), catId);
+                break;
+
+            case 8:
+                // Move art to new category
+                artWebRq.execute(String.valueOf(act), params[0], params[1]);
+                break;
+            case 9:
+                artWebRq.execute(String.valueOf(act), params[0]);
+                // Delete art from system
+                break;
+
+            case 11:
+                // Get list of categories for admin
+                artWebRq.execute(String.valueOf(act));
                 break;
         }
     }
@@ -69,31 +95,33 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        dbh = new caheDB(this);
-        db = dbh.getWritableDatabase();
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery);
 
         isAdmin = getIntent().getBooleanExtra("isAdmin", false);
 
-        Toast.makeText(this, getText(R.string.load_start), Toast.LENGTH_LONG);
+        Toast.makeText(this, getText(R.string.load_start), Toast.LENGTH_LONG).show();
 
         loadCategory(2);
 
-        dbh.onUpgrade(db, 0, 0);
+
 
     }
 
     public void pArtListLoaded(JSONArray jArr) {
+
+        dbh = new caheDB(this);
+        db = dbh.getWritableDatabase();
+
+        dbh.onUpgrade(db, 0, 0);
 
         ContentValues dbRow = new ContentValues();
 
         Log.v("!", "Got arts from category");
 
         String[] artID = new String[jArr.length()];
-        final String[] artName = new String[jArr.length()];
         String[] artThumb = new String[jArr.length()];
+        final String[] artName = new String[jArr.length()];
         final String[] artFull = new String[jArr.length()];
         final String[] artAuthor = new String[jArr.length()];
 
@@ -128,11 +156,15 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
         Map<String, String[]> artData = new HashMap<>();
         artData.put("art_name", artName);
         artData.put("art_tb", artThumb);
+        artData.put("art_id", artID);
 
         try{
 
             GridView outGridVW = (GridView) findViewById(R.id.gvArts);
-            ListAdapter grAdapt = new artAdapter(this, artName, artData, asyncThumbs);
+            ListAdapter grAdapt = new artAdapter(this, artName);
+            ((artAdapter) grAdapt).allArtInfo = artData;
+            ((artAdapter) grAdapt).aL = asyncThumbs;
+            ((artAdapter) grAdapt).isAdmin = isAdmin;
             outGridVW.setAdapter(grAdapt);
 
             outGridVW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -148,7 +180,7 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
                     intFull.putExtra("imgMaxInd", artName.length);
                     intFull.putExtra("imgIndex", position);
                     intFull.putExtra("isAdmin", isAdmin);
-                    parent.getContext().startActivity(intFull);
+                    startActivityForResult(intFull, 2);
 
                 }
             });
@@ -156,36 +188,89 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
         } catch (Exception e){
             e.printStackTrace();
         }
+
+        if(isAdmin){
+            loadCategory(11);
+        }
+
     }
 
     @Override
-    public void pCatRenamed(JSONArray jArr) {
-        Log.v("CR", jArr.toString());
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2) {
+            if(resultCode == RESULT_OK) {
+                boolean catChanged = data.getBooleanExtra("artsChanged", false);
+                if(catChanged){
+                    loadCategory(2);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void pCatDeletedRenamed(boolean operDel) {
+
         Toast.makeText(this, R.string.load_conf, Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent();
         intent.putExtra("catChanged", true);
         setResult(RESULT_OK, intent);
+
+        if(operDel){
+            onBackPressed();
+        }
+
     }
 
     @Override
-    public void pCatDeleted(JSONArray jArr) {
-        Log.v("CD", jArr.toString());
+    public void pArtsDeletedMoved(boolean operDel) {
+
+        int msg =0  ;
+
+        if (operDel){
+            msg = R.string.load_deleted;
+        } else {
+            msg = R.string.load_moved;
+        }
+
+        adminOperCount--;
+        if(adminOperCount==0) {
+            Toast.makeText(GalleryActivity.this, msg, Toast.LENGTH_SHORT).show();
+            findViewById(R.id.pbWaitGal).setVisibility(View.VISIBLE);
+            loadCategory(2);
+        }
 
         Intent intent = new Intent();
         intent.putExtra("catChanged", true);
         setResult(RESULT_OK, intent);
-
-        onBackPressed();
     }
 
-    @Override
-    public void pArtsMoved(JSONArray jArr) {
-
-    }
 
     @Override
-    public void pArtsDeleted(JSONArray jArr) {
+    public void pAdminCatsLoaded(JSONArray jArr) {
+
+        Log.v("!","Got Cats list");
+        Log.v("JDCL", jArr.toString());
+
+        try {
+
+           catNames = new String[jArr.length()];
+           catIDs = new String[jArr.length()];
+
+            JSONObject jData = null;
+
+            for (int i = 0; i < jArr.length(); i++) {
+
+                jData = jArr.getJSONObject(i);
+
+                catNames[i] = jData.getString("cat_name");
+                catIDs[i] = jData.getString("cat_id");
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -217,18 +302,47 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.mReloadGala:
-                loadCategory(2);
+    private void myGalaDialog(final myGalaDialogType galaDialT){
+
+        int dlgTitle = 0;
+        int dlgIcon = 0;
+        View dlgCont = null;
+
+        switch (galaDialT){
+            case ArtsMove:
+                dlgTitle = R.string.dlgMoveToTitle;
+                dlgIcon = android.R.drawable.ic_menu_today;
+
+                ArrayAdapter<String> optAdapt = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, catNames);
+                optAdapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                Spinner calDate = new Spinner(this);
+                LinearLayout.LayoutParams lyParam = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                );
+                calDate.setLayoutParams(lyParam);
+                calDate.setAdapter(optAdapt);
+                calDate.setPadding(25,(int) getResources().getDimension(R.dimen.lblSides),
+                        25, (int) getResources().getDimension(R.dimen.lblSides));
+                calDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        selCatIDInd = i;
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
+                dlgCont = calDate;
+
                 break;
-
-            case R.id.mRenCat:
-
-                final AlertDialog.Builder dlgDateTpl = new AlertDialog.Builder(this);
-                dlgDateTpl.setTitle(R.string.dlgCatRename);
-                dlgDateTpl.setIcon(android.R.drawable.ic_menu_edit);
+            case CatRename:
+                dlgTitle = R.string.dlgCatRename;
+                dlgIcon = android.R.drawable.ic_menu_edit;
 
                 final EditText edtPass = new EditText(this);
                 LinearLayout.LayoutParams lpP = new LinearLayout.LayoutParams(
@@ -239,38 +353,113 @@ public class GalleryActivity extends Activity implements WebRequest.webUIGalaIf 
                         25, (int) getResources().getDimension(R.dimen.lblSides));
                 edtPass.setLayoutParams(lpP);
 
-                dlgDateTpl.setView(edtPass);
+                dlgCont = edtPass;
+                break;
+        }
 
-                dlgDateTpl.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+        final AlertDialog.Builder dlgDateTpl = new AlertDialog.Builder(this);
+        dlgDateTpl.setTitle(dlgTitle);
+        dlgDateTpl.setIcon(dlgIcon);
+
+        dlgDateTpl.setView(dlgCont);
+
+        final View finalDlgCont = dlgCont;
+        dlgDateTpl.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+
+
+                switch (galaDialT){
+                    case ArtsMove:
+
+                        Toast.makeText(GalleryActivity.this, getString(R.string.load_moving), Toast.LENGTH_SHORT).show();
+
+                        adminOperCount = 0;
+                        GridView gridView = (GridView) findViewById(R.id.gvArts);
+                        for(int j = 0; j < gridView.getChildCount(); j++) {
+                            View vG = gridView.getChildAt(j);
+                            CheckBox cbArt = (CheckBox) vG.findViewById(R.id.checkBoxArt);
+                            if(cbArt.isChecked()) {
+
+                                String aid = (String) vG.getTag();
+                                loadCategory(8, aid, catIDs[selCatIDInd]);
+
+                                TextView artName = (TextView) vG.findViewById(R.id.textTitle);
+
+
+                                adminOperCount++;
+
+                                Log.v("AID", aid);
+                            }
+
+                        }
+
+                        break;
+
+                    case CatRename:
+
                         Toast.makeText(GalleryActivity.this, R.string.load_proc, Toast.LENGTH_SHORT).show();
-                        loadCategory(6, edtPass.getText().toString());
+                        loadCategory(6, ((TextView) finalDlgCont).getText().toString());
 
-                    }
-                });
-                dlgDateTpl.setNegativeButton(this.getString(R.string.btnCancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                        break;
+                }
 
-                        dialogInterface.cancel();
-                    }
-                });
-                AlertDialog dlgDate = dlgDateTpl.create();
-                dlgDate.show();
+            }
+        });
+        dlgDateTpl.setNegativeButton(this.getString(R.string.btnCancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog dlgDate = dlgDateTpl.create();
+        dlgDate.show();
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mReloadGala:
+                    loadCategory(2);
+                break;
+
+            case R.id.mRenCat:
+                    myGalaDialog(myGalaDialogType.CatRename);
                 break;
 
             case R.id.mDelCat:
-                loadCategory(7);
+                    loadCategory(7);
                 break;
 
             case R.id.mMoveGala:
-
+                    myGalaDialog(myGalaDialogType.ArtsMove);
                  break;
 
             case R.id.mDelGala:
+
+                Toast.makeText(GalleryActivity.this, getString(R.string.load_deleting), Toast.LENGTH_SHORT).show();
+
+                adminOperCount = 0;
+                GridView gridView = (GridView) findViewById(R.id.gvArts);
+                for(int j = 0; j < gridView.getChildCount(); j++) {
+                    View vG = gridView.getChildAt(j);
+                    CheckBox cbArt = (CheckBox) vG.findViewById(R.id.checkBoxArt);
+                    if(cbArt.isChecked()) {
+
+                        String aid = (String) vG.getTag();
+                        loadCategory(9, aid);
+
+                        TextView artName = (TextView) vG.findViewById(R.id.textTitle);
+
+
+                        adminOperCount++;
+
+                        Log.v("AID", aid);
+                    }
+
+                }
 
                 break;
         }

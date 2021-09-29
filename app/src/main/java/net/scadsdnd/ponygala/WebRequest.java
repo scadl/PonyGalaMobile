@@ -35,13 +35,13 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
         void pCategoryListLoaded(JSONArray jArr);
         void pSelectionDatesLoaded(JSONArray jArr);
         void pCategoryAdded(JSONArray jArr);
+        void pAdminPassCheck(JSONArray jArr);
     }
     interface webUIGalaIf{
         void pArtListLoaded(JSONArray jArr);
-        void pCatRenamed(JSONArray jArr);
-        void pCatDeleted(JSONArray jArr);
-        void pArtsMoved(JSONArray jArr);
-        void pArtsDeleted(JSONArray jArr);
+        void pAdminCatsLoaded(JSONArray jArr);
+        void pCatDeletedRenamed(boolean operDel);
+        void pArtsDeletedMoved(boolean operDel);
     }
 
     private webUICatIf CBCatVar;
@@ -119,7 +119,7 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
                     break;
                 case 8:
                     // Move art to new category
-                    getParams += "&aid="+inParams[1]+"&cat="+inParams[2]+"&date="+inParams[3]+"&dateupd=false";
+                    getParams += "&aid="+inParams[1]+"&cat="+inParams[2]+"&date=1-01-1970&dateupd=false";
                     break;
                 case 9:
                     // Delete art from system
@@ -127,7 +127,11 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
                     break;
                 case 10:
                     // Check admin password
-                    getParams += "&pass"+inParams[1];
+                    getParams += "&pass="+inParams[1];
+                    break;
+                case 11:
+                    // Get list of categories for admin
+                    // no params required
                     break;
                 default:
 
@@ -222,16 +226,22 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
                     CBCatVar.pCategoryAdded(jRows);
                     break;
                 case 6:
-                    CBGalVar.pCatRenamed(jRows);
+                    CBGalVar.pCatDeletedRenamed(false);
                     break;
                 case 7:
-                    CBGalVar.pCatDeleted(jRows);
+                    CBGalVar.pCatDeletedRenamed(true);
                     break;
                 case 8:
-                    CBGalVar.pArtsMoved(jRows);
+                    CBGalVar.pArtsDeletedMoved(false);
                     break;
                 case 9:
-                    CBGalVar.pArtsDeleted(jRows);
+                    CBGalVar.pArtsDeletedMoved(true);
+                    break;
+                case 10:
+                    CBCatVar.pAdminPassCheck(jRows);
+                    break;
+                case 11:
+                    CBGalVar.pAdminCatsLoaded(jRows);
                     break;
 
                 default:

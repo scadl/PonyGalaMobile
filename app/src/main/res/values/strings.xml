@@ -16,6 +16,10 @@
     <string name="load_error">Ошибка при загрузке данных</string>
     <string name="load_proc">Обработка запроса...</string>
     <string name="load_conf">Операция выполнена</string>
+    <string name="load_moving">Перемещаю арты </string>
+    <string name="load_deleting">Удаляю арты </string>
+    <string name="load_moved">Перемещение завершено </string>
+    <string name="load_deleted">Удаление завершено </string>
     <string name="mSelDate">Выбрать дату подборки</string>
     <string name="mLockLoad">Ожидать загрузки миниатюр</string>
     <string name="mReload">Перезагрузить страницу</string>
@@ -34,6 +38,11 @@
     <string name="dlgNewCatTitle">Новая категория</string>
     <string name="dlgCatRename">Переименовать катгорию</string>
     <string name="dlgAdminPassTitle">Пароль админ.</string>
+    <string name="dlgMoveToTitle">Переместить в категорию</string>
     <string name="exitConfirm">Нажмите ещё раз \'Назад\', чтобы выйти</string>
+    <string name="load_admin_ok">Вы вошли как администратор</string>
+    <string name="load_admin_err">Пароль не верный</string>
+    <string name="load_admin_exit">Просмотр в режиме пользователя</string>
+    <string name="wip_func">Эта опция в стадии разработки</string>
 
 </resources>

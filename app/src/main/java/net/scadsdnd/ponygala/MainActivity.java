@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.util.Calendar;
 import android.os.*;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -33,7 +34,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends Activity implements WebRequest.webUICatIf
+
+
+public class MainActivity extends AppCompatActivity implements WebRequest.webUICatIf
 {
 
     private Integer lvl = 0;
@@ -141,29 +144,10 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
 
                 myDialog(dialogTypes.adminPass);
 
-                // --------------------- TEMP
-
-                Toast.makeText(this, "You are admin", Toast.LENGTH_SHORT).show();
-
-                prfEditor.putBoolean("admin_mode", true);
-                prfEditor.commit();
-
-                isAdmin = true;
-
-                mLogin.setVisible(false);
-                mLogout.setVisible(true);
-                mAddCat.setVisible(true);
-
-                if(selDate!=null) {
-                    sectionTask(true).execute("1", selDate);
-                } else {
-                    sectionTask(true).execute("1");
-                }
-
                 break;
             case R.id.mLogout:
 
-                Toast.makeText(this, "You are visitor", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.load_admin_exit, Toast.LENGTH_SHORT).show();
 
                 prfEditor.putBoolean("admin_mode", false);
                 prfEditor.commit();
@@ -186,9 +170,12 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
                 System.exit(0);
                 break;
             case R.id.mLockLoad:
+
                 MenuItem mR = item;
                 mR.setChecked(!mR.isChecked());
+
                 lockLoad = mR.isChecked();
+
                 break;
             case R.id.mSelDate:
 
@@ -421,12 +408,6 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                try {
-                    Toast.makeText(parent.getContext(), "db_id:" + catID[position], Toast.LENGTH_SHORT).show();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
                 // Prevent execution of async tasks, after activity closed
                 for (int i=0; i< asyncList.size(); i++ ) {
                     asyncList.get(i).cancel(true);
@@ -489,6 +470,46 @@ public class MainActivity extends Activity implements WebRequest.webUICatIf
         } else {
             sectionTask(true).execute("1");
         }
+
+    }
+
+    @Override
+    public void pAdminPassCheck(JSONArray jArr) {
+
+        try {
+
+            JSONObject jData = jArr.getJSONObject(0);
+            boolean srvIsAdmin = Boolean.parseBoolean(jData.getString("isAdmin"));
+
+            Log.v("J", String.valueOf(srvIsAdmin));
+
+            if(srvIsAdmin){
+                SharedPreferences.Editor prfEditor = shPrf.edit();
+
+                Toast.makeText(this, R.string.load_admin_ok, Toast.LENGTH_SHORT).show();
+
+                prfEditor.putBoolean("admin_mode", true);
+                prfEditor.commit();
+
+                isAdmin = true;
+
+                mLogin.setVisible(false);
+                mLogout.setVisible(true);
+                mAddCat.setVisible(true);
+
+                if(selDate!=null) {
+                    sectionTask(true).execute("1", selDate);
+                } else {
+                    sectionTask(true).execute("1");
+                }
+            } else {
+                Toast.makeText(this, R.string.load_admin_err, Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
 
     }
 }

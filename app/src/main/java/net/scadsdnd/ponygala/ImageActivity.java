@@ -4,10 +4,11 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
-import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,17 +17,13 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ImageActivity extends Activity {
+public class ImageActivity extends AppCompatActivity {
 
     private int index = 0;
     private int max_index = 0;
@@ -196,13 +193,43 @@ public class ImageActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        //WebRequest artWebRq = new WebRequest();
+
+        //artWebRq.UIContext = this;
+        //artWebRq.pbIndicator = null;
+
         switch (item.getItemId()) {
             case R.id.mReloadFull:
-                loadImage(index);
+                    loadImage(index);
+                break;
+            case R.id.mMoveFull:
+
+
+                //artWebRq.execute(8, aid, catid);
+
+                //Intent intent = new Intent();
+                //intent.putExtra("artsChanged", true);
+                //setResult(RESULT_OK, intent);
+
+                Toast.makeText(ImageActivity.this, R.string.wip_func, Toast.LENGTH_SHORT).show();
+
+                break;
+            case R.id.mDeleteFull:
+
+                //artWebRq.execute(9, aid, catid);
+
+                //Intent intent2 = new Intent();
+                //intent2.putExtra("artsChanged", true);
+                //setResult(RESULT_OK, intent2);
+
+                Toast.makeText(ImageActivity.this, R.string.wip_func, Toast.LENGTH_SHORT).show();
+
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 
 

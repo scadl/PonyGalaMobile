@@ -22,5 +22,6 @@
         android:layout_height="match_parent"
         android:columnWidth="150dp"
         android:gravity="bottom"
-        android:numColumns="3" />
+        android:numColumns="3"
+        android:textAlignment="gravity" />
 </LinearLayout>

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class caheDB extends SQLiteOpenHelper {
 
     public final static String TAB = "images";
-    public final String[] COLS = {"ind", "full", "title", "author"};
+    public final String[] COLS = {"ind", "full", "title", "author", "srcLink", "aid"};
 
     public caheDB(Context context) {
         super(context, "ag_cache.db", null, 1);
@@ -15,7 +15,15 @@ public class caheDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + TAB + " ("+COLS[0]+" INTEGER, " + COLS[1] + " TEXT, " + COLS[2] + " TEXT, " + COLS[3] + " TEXT);");
+        sqLiteDatabase.execSQL(
+                "CREATE TABLE " + TAB + " (" +
+                "" + COLS[0]+" INTEGER, " +
+                "" + COLS[1] + " TEXT, " +
+                "" + COLS[2] + " TEXT, " +
+                "" + COLS[3] + " TEXT, " +
+                "" + COLS[4] + " TEXT, " +
+                "" + COLS[5] + " INTEGER " +
+                ");");
     }
 
     @Override

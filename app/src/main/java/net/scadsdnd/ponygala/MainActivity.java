@@ -90,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements WebRequest.webUIC
             asyncList.get(i).cancel(true);
         }
 
-        ProgressBar pbIndicatorElem = (ProgressBar) findViewById(R.id.pbWaitMain);
+        View pbIndicatorElem = (View) findViewById(R.id.pbWaitMain);
+        TextView tvStatus = (TextView) findViewById(R.id.tvStatusMain);
 
         if(showIndicator) {
             pbIndicatorElem.setVisibility(View.VISIBLE);
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements WebRequest.webUIC
         catWebRq.UIContext = this;
         catWebRq.regCatCb(this);
         catWebRq.pbIndicator = pbIndicatorElem;
+        catWebRq.StatusUI = tvStatus;
 
         lastCatWebRq = catWebRq;
 
@@ -276,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements WebRequest.webUIC
 
         dlgDateTpl.setView(dCont);
 
-        final TextView finalDCont = (TextView) dCont;
+        final View finalDCont = dCont;
         dlgDateTpl.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -286,11 +288,11 @@ public class MainActivity extends AppCompatActivity implements WebRequest.webUIC
                         sectionTask(true).execute("1", selDate);
                         break;
                     case adminPass:
-                        sectionTask(false).execute("10", finalDCont.getText().toString());
+                        sectionTask(false).execute("10", ((TextView) finalDCont).getText().toString());
                         break;
                     case newCatName:
                         Toast.makeText(MainActivity.this, R.string.load_proc, Toast.LENGTH_LONG).show();
-                        sectionTask(false).execute("5", finalDCont.getText().toString());
+                        sectionTask(false).execute("5", ((TextView) finalDCont).getText().toString());
                         break;
                 }
 

@@ -59,11 +59,10 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
     private String out;
     public Context UIContext;
     public View pbIndicator;
-    private int toastDuration;
+    public TextView StatusUI;
 
     @Override
     protected void onPreExecute() {
-        toastDuration = 0;
         super.onPreExecute();
     }
 
@@ -141,7 +140,7 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
             Log.v("ATR!", youServ.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            publishProgress(UIContext.getString(R.string.load_error));
+            publishProgress(e.getLocalizedMessage());
         }
 
         publishProgress(UIContext.getString(R.string.load_connect));
@@ -174,7 +173,7 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
             //readStream(inS)
         } catch (IOException e) {
             e.printStackTrace();
-            publishProgress(UIContext.getString(R.string.load_error));
+            publishProgress(e.getLocalizedMessage());
         } finally {
             urlConn.disconnect();
         }
@@ -185,32 +184,30 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
 
     @Override
     protected void onProgressUpdate(String... values) {
-        //StatusUI.setText(values[0]);
-        try{
-            //Toast.makeText(UIContext, values[0], toastDuration).show();
-            Log.i("ATP!", values[0]);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+
+        StatusUI.setText(values[0]);
+        Log.i("ATP!", values[0]);
+
         super.onProgressUpdate(values);
     }
 
     @Override
     protected void onPostExecute(Integer act) {
 
-        try {
-            //Toast.makeText(UIContext, UIContext.getString(R.string.load_process), toastDuration).show();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+
+         StatusUI.setText( UIContext.getString(R.string.load_process) );
+
 
         try {
-
-            Log.v("LOG", out);
 
             JSONArray jRows = new JSONArray(out);
 
-            Log.v("JSON", Integer.toString(jRows.length()));
+            try {
+                Log.v("LOG", out);
+                Log.v("JSON", Integer.toString(jRows.length()));
+            } catch (Exception e){
+                e.printStackTrace();
+            }
 
             switch (act){
                 case 1:
@@ -246,30 +243,18 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
 
                 default:
                         Log.e("!SRV", "Unknown API request");
-                        try {
-                            //Toast.makeText(UIContext, "Unknown API request", toastDuration).show();
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
+                        StatusUI.setText("Unknown API request");
 
                    break;
             }
 
-            try {
-                //Toast.makeText(UIContext, UIContext.getString(R.string.load_complete), toastDuration).show();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+            StatusUI.setText(UIContext.getString(R.string.load_complete));
 
             pbIndicator.setVisibility(View.GONE);
 
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                //Toast.makeText(UIContext, UIContext.getString(R.string.load_error), toastDuration).show();
-            } catch (Exception e2){
-                e2.printStackTrace();
-            }
+            StatusUI.setText(UIContext.getString(R.string.load_error) + e.getLocalizedMessage());
 
         }
 

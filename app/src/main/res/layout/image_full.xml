@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@color/dimDark"
     android:orientation="vertical"
     tools:context=".ImageActivity">
 
@@ -13,11 +14,11 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-            <ImageView
-                android:id="@+id/ivFull"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:srcCompat="@android:drawable/ic_popup_sync" />
+        <ImageView
+            android:id="@+id/ivFull"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@android:drawable/ic_popup_sync" />
 
 
     </ScrollView>
@@ -46,6 +47,7 @@
                 android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="@color/dimDark"
                 android:src="@android:drawable/ic_media_previous"
                 android:text="" />
 
@@ -76,6 +78,7 @@
                 android:id="@+id/btnNext"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="@color/dimDark"
                 android:src="@android:drawable/ic_media_next"
                 android:text="" />
         </LinearLayout>

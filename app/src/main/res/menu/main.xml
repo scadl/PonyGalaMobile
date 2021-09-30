@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/mLockLoad"
-        android:checkable="true"
-        android:icon="@android:drawable/ic_menu_report_image"
-        android:title="@string/mLockLoad"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/mSelDate"
         android:icon="@android:drawable/ic_menu_today"
         android:title="@string/mSelDate"
@@ -19,6 +13,12 @@
         android:icon="@android:drawable/ic_menu_rotate"
         android:title="@string/mReload"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/mLockLoad"
+        android:checkable="true"
+        android:icon="@android:drawable/ic_menu_report_image"
+        android:title="@string/mLockLoad" />
 
     <item
         android:id="@+id/mExit"

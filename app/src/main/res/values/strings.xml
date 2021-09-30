@@ -13,7 +13,7 @@
     <string name="load_finish">Загрузка завершена</string>
     <string name="load_process">Обработка ответа</string>
     <string name="load_complete">Загрузка завршена</string>
-    <string name="load_error">Ошибка при загрузке данных</string>
+    <string name="load_error">Ошибка при загрузке данных </string>
     <string name="load_proc">Обработка запроса...</string>
     <string name="load_conf">Операция выполнена</string>
     <string name="load_moving">Перемещаю арты </string>
@@ -21,7 +21,7 @@
     <string name="load_moved">Перемещение завершено </string>
     <string name="load_deleted">Удаление завершено </string>
     <string name="mSelDate">Выбрать дату подборки</string>
-    <string name="mLockLoad">Ожидать загрузки миниатюр</string>
+    <string name="mLockLoad">Ожидать миниатюры</string>
     <string name="mReload">Перезагрузить страницу</string>
     <string name="mLogin">Администр. вход</string>
     <string name="mLogout">Администр. выход</string>
@@ -33,6 +33,7 @@
     <string name="mRenCat">Переименовать категорию</string>
     <string name="mDelCat">Удалить категорию</string>
     <string name="mAddCat">Добавить категорию</string>
+    <string name="mSourceLink">Открыть источник</string>
     <string name="btnCancel">Отмена</string>
     <string name="dlgDateTitle">Выбор подборки</string>
     <string name="dlgNewCatTitle">Новая категория</string>

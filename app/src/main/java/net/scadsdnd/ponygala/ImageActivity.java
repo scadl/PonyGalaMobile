@@ -1,9 +1,11 @@
 package net.scadsdnd.ponygala;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -36,13 +38,13 @@ public class ImageActivity extends AppCompatActivity {
     private float mScale = 1f;
     private ScaleGestureDetector mScaleGestureDetector;
     private GestureDetector gestureDetector;
-
+    private String externalSRC;
 
 
 
     private void loadImage(int index){
 
-        String[] rowCols = {dbh.COLS[0],dbh.COLS[1], dbh.COLS[2], dbh.COLS[3]};
+        String[] rowCols = {dbh.COLS[0],dbh.COLS[1], dbh.COLS[2], dbh.COLS[3], dbh.COLS[4], dbh.COLS[5]};
         String[] dbParams = { String.valueOf(index) };
         Cursor dbCursor = db.query(dbh.TAB, rowCols, dbh.COLS[0]+" = ?", dbParams, null, null, null);
         dbCursor.moveToNext();
@@ -53,6 +55,7 @@ public class ImageActivity extends AppCompatActivity {
 
         tvTitle.setText(dbCursor.getString(2));
         tvAuthor.setText(dbCursor.getString(3));
+        externalSRC = dbCursor.getString(4);
 
         artRequest imgFullRQ = new artRequest();
 
@@ -133,7 +136,11 @@ public class ImageActivity extends AppCompatActivity {
                 if (mScale > 10f)
                     mScale = 10f;
 
-                ScaleAnimation scaleAnimation = new ScaleAnimation(1f / prevScale, 1f / mScale, 1f / prevScale, 1f / mScale, detector.getFocusX(), detector.getFocusY());
+                ScaleAnimation scaleAnimation = new ScaleAnimation(
+                        1f / prevScale, 1f / mScale,
+                        1f / prevScale, 1f / mScale,
+                        detector.getFocusX(), detector.getFocusY()
+                );
 
                 // duration of animation will be 0.It will
                 // not change by self after that
@@ -202,6 +209,10 @@ public class ImageActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.mReloadFull:
                     loadImage(index);
+                break;
+            case R.id.mOpenOrgnal:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(externalSRC));
+                startActivity(browserIntent);
                 break;
             case R.id.mMoveFull:
 

@@ -54,7 +54,8 @@ public class GalleryActivity extends AppCompatActivity implements WebRequest.web
 
         artWebRq.UIContext = this;
         artWebRq.regGalCb(this);
-        artWebRq.pbIndicator = (ProgressBar) findViewById(R.id.pbWaitGal);
+        artWebRq.pbIndicator = (View) findViewById(R.id.pbWaitGala);
+        artWebRq.StatusUI = (TextView) findViewById(R.id.tvStatusGala);
 
         String selDate = getIntent().getStringExtra("catDate");
         String catId = getIntent().getStringExtra("catId");
@@ -121,6 +122,7 @@ public class GalleryActivity extends AppCompatActivity implements WebRequest.web
 
         String[] artID = new String[jArr.length()];
         String[] artThumb = new String[jArr.length()];
+        String[] artSrc = new String[jArr.length()];
         final String[] artName = new String[jArr.length()];
         final String[] artFull = new String[jArr.length()];
         final String[] artAuthor = new String[jArr.length()];
@@ -137,11 +139,14 @@ public class GalleryActivity extends AppCompatActivity implements WebRequest.web
                 artThumb[i] = jData.getString("thumb");
                 artFull[i] = jData.getString("file_name");
                 artAuthor[i] = jData.getString("author");
+                artSrc[i] = jData.getString("da_page");
 
                 dbRow.put(dbh.COLS[0], i);
                 dbRow.put(dbh.COLS[1],artFull[i]);
                 dbRow.put(dbh.COLS[2],artName[i]);
                 dbRow.put(dbh.COLS[3],artAuthor[i]);
+                dbRow.put(dbh.COLS[4],artSrc[i]);
+                dbRow.put(dbh.COLS[5],artID[i]);
                 db.insert(dbh.TAB, null, dbRow);
                 dbRow.clear();
 
@@ -237,7 +242,7 @@ public class GalleryActivity extends AppCompatActivity implements WebRequest.web
         adminOperCount--;
         if(adminOperCount==0) {
             Toast.makeText(GalleryActivity.this, msg, Toast.LENGTH_SHORT).show();
-            findViewById(R.id.pbWaitGal).setVisibility(View.VISIBLE);
+            findViewById(R.id.pbWaitGala).setVisibility(View.VISIBLE);
             loadCategory(2);
         }
 

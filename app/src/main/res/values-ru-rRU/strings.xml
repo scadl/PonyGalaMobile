@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="title_cat">Список категорий</string>
+    <string name="title_gala">Просмотр категории</string>
+    <string name="title_full">Арт целиком</string>
+    <string name="catName_ph">Категория</string>
+    <string name="load_form">Формирую запрос</string>
+    <string name="load_connect">Соединение с сервером</string>
+    <string name="load_start">Загружаю данные</string>
+    <string name="load_finish">Загрузка завершена</string>
+    <string name="load_process">Обработка ответа</string>
+    <string name="load_complete">Загрузка завршена</string>
+    <string name="load_error">Ошибка при загрузке данных </string>
+    <string name="load_proc">Обработка запроса...</string>
+    <string name="load_conf">Операция выполнена</string>
+    <string name="load_moving">Перемещаю арты </string>
+    <string name="load_deleting">Удаляю арты </string>
+    <string name="load_moved">Перемещение завершено </string>
+    <string name="load_deleted">Удаление завершено </string>
+    <string name="mSelDate">Выбрать дату подборки</string>
+    <string name="mLockLoad">Ожидать миниатюры</string>
+    <string name="mReload">Перезагрузить страницу</string>
+    <string name="mLogin">Администр. вход</string>
+    <string name="mLogout">Администр. выход</string>
+    <string name="mExit">Выход из программы</string>
+    <string name="mMove">Перместить выбраное</string>
+    <string name="mDelete">Удалить выбраное</string>
+    <string name="mMoveArt">Перместить арт</string>
+    <string name="mDeleteArt">Удалить арт</string>
+    <string name="mRenCat">Переименовать категорию</string>
+    <string name="mDelCat">Удалить категорию</string>
+    <string name="mAddCat">Добавить категорию</string>
+    <string name="mSourceLink">Открыть источник</string>
+    <string name="btnCancel">Отмена</string>
+    <string name="dlgDateTitle">Выбор подборки</string>
+    <string name="dlgNewCatTitle">Новая категория</string>
+    <string name="dlgCatRename">Переименовать катгорию</string>
+    <string name="dlgAdminPassTitle">Пароль админ.</string>
+    <string name="dlgMoveToTitle">Переместить в категорию</string>
+    <string name="exitConfirm">Нажмите ещё раз \'Назад\', чтобы выйти</string>
+    <string name="load_admin_ok">Вы вошли как администратор</string>
+    <string name="load_admin_err">Пароль не верный</string>
+    <string name="load_admin_exit">Просмотр в режиме пользователя</string>
+    <string name="wip_func">Эта опция в стадии разработки</string>
+
+</resources>

@@ -136,7 +136,7 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
 
                     break;
             }
-            youServ = new URL("https://artgala.scadsdnd.net/mods/api.php?"+getParams);
+            youServ = new URL("http://artgala.scadsdnd.net/mods/api.php?"+getParams);
             Log.v("ATR!", youServ.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -147,7 +147,7 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
 
         HttpURLConnection urlConn = null;
         try {
-            urlConn = (HttpsURLConnection) youServ.openConnection();
+            urlConn = (HttpURLConnection) youServ.openConnection();
             urlConn.setRequestMethod("GET");
 
             // Ho to use POST params

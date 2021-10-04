@@ -57,12 +57,15 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
     // Callback reg end
 
     private String out;
+    private String allErrors;
+
     public Context UIContext;
     public View pbIndicator;
     public TextView StatusUI;
 
     @Override
     protected void onPreExecute() {
+        allErrors = UIContext.getString(R.string.load_error) + "\n";
         super.onPreExecute();
     }
 
@@ -140,7 +143,8 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
             Log.v("ATR!", youServ.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            publishProgress(e.getLocalizedMessage());
+            allErrors += e.getLocalizedMessage() + "\n";
+            publishProgress(allErrors);
         }
 
         publishProgress(UIContext.getString(R.string.load_connect));
@@ -156,7 +160,8 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
 
         } catch (IOException e) {
             e.printStackTrace();
-            publishProgress(e.getLocalizedMessage());
+            allErrors += e.getLocalizedMessage() + "\n";
+            publishProgress(allErrors);
         }
 
         try{
@@ -173,7 +178,8 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
             //readStream(inS)
         } catch (IOException e) {
             e.printStackTrace();
-            publishProgress(e.getLocalizedMessage());
+            allErrors += e.getLocalizedMessage() + "\n";
+            publishProgress(allErrors);
         } finally {
             urlConn.disconnect();
         }
@@ -207,6 +213,8 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
                 Log.v("JSON", Integer.toString(jRows.length()));
             } catch (Exception e){
                 e.printStackTrace();
+                allErrors += e.getLocalizedMessage() + "\n";
+                StatusUI.setText( allErrors);
             }
 
             switch (act){
@@ -254,7 +262,8 @@ public class WebRequest extends AsyncTask<String,String,Integer> {
 
         } catch (Exception e) {
             e.printStackTrace();
-            StatusUI.setText(UIContext.getString(R.string.load_error) + e.getLocalizedMessage());
+            allErrors += e.getLocalizedMessage() + "\n";
+            StatusUI.setText( allErrors);
 
         }
 

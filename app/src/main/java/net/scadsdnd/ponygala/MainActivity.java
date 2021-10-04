@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements WebRequest.webUIC
     private String selDate = null;
     private List<artRequest> asyncList = new ArrayList<>();
     private SharedPreferences shPrf;
-    private MenuItem mAddCat, mLogout, mLogin;
+    private MenuItem mAddCat, mLogout, mLogin, mSelDate;
     private enum dialogTypes { dateSlection, newCatName, adminPass }
 
     @Override
@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements WebRequest.webUIC
         mAddCat = menu.findItem(R.id.mAddCat);
         mLogout = menu.findItem(R.id.mLogout);
         mLogin= menu.findItem(R.id.mLogin);
+        mSelDate = menu.findItem(R.id.mSelDate);
 
         if(isAdmin){
             mLogin.setVisible(false);
@@ -140,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements WebRequest.webUIC
 
         switch (item.getItemId()){
             case R.id.mReload:
+                mSelDate.setVisible(false);
                 sectionTask(true).execute("1");
                 break;
             case R.id.mLogin:
@@ -445,6 +447,10 @@ public class MainActivity extends AppCompatActivity implements WebRequest.webUIC
                 optData[i] = jData.getString(i);
                 //Log.v("J", jData.getString(i));
             }
+
+
+            mSelDate.setVisible(true);
+
         } catch (Exception e){
             e.printStackTrace();
         }

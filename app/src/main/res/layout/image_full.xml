@@ -8,27 +8,15 @@
     android:orientation="vertical"
     tools:context=".ImageActivity">
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <WebView
+        android:id="@+id/wvFull"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fitsSystemWindows="true"
+        android:scrollbars="horizontal|vertical"
+        tools:ignore="WebViewLayout">
 
-        <ImageView
-            android:id="@+id/ivFull"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@android:drawable/ic_popup_sync" />
-
-
-    </ScrollView>
-
-    <ProgressBar
-        android:id="@+id/pbFull"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/lblSides" />
+    </WebView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

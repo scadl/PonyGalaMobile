@@ -6,7 +6,8 @@
         android:id="@+id/mSelDate"
         android:icon="@android:drawable/ic_menu_today"
         android:title="@string/mSelDate"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:visible="false"/>
 
     <item
         android:id="@+id/mReload"

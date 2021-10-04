@@ -43,5 +43,6 @@
     <string name="load_admin_err">Пароль не верный</string>
     <string name="load_admin_exit">Просмотр в режиме пользователя</string>
     <string name="wip_func">Эта опция в стадии разработки</string>
+    <string name="progTbProc">Обрабатываю миниатюры \n %1$d из %2$d</string>
 
 </resources>

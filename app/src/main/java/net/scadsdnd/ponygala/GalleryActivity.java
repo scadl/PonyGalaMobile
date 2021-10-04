@@ -111,6 +111,8 @@ public class GalleryActivity extends AppCompatActivity implements WebRequest.web
 
     public void pArtListLoaded(JSONArray jArr) {
 
+        TextView tvStatusL = (TextView) findViewById(R.id.tvStatusGala);
+
         dbh = new caheDB(this);
         db = dbh.getWritableDatabase();
 
@@ -150,6 +152,11 @@ public class GalleryActivity extends AppCompatActivity implements WebRequest.web
                 db.insert(dbh.TAB, null, dbRow);
                 dbRow.clear();
 
+                tvStatusL.setText(
+                        String.format(
+                                getResources().getString(R.string.progTbProc), i, jArr.length()
+                        )
+                );
             }
         } catch (JSONException e) {
             e.printStackTrace();

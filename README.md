@@ -6,6 +6,4 @@ The app constatntly improving and regualry updated. Join at:
 https://play.google.com/store/apps/details?id=net.scadsdnd.ponygala
 
 ### Screenshots
-![Main](https://github.com/scadl/PonyGalaMobile/blob/main/screens/Main.png)
-![Main](https://github.com/scadl/PonyGalaMobile/blob/main/screens/Category.png)
-![Main](https://github.com/scadl/PonyGalaMobile/blob/main/screens/Full.png)
+<img src="https://github.com/scadl/PonyGalaMobile/blob/main/screens/Main.png" width="300"> <img src="https://github.com/scadl/PonyGalaMobile/blob/main/screens/Category.png" width="300"> <img src="https://github.com/scadl/PonyGalaMobile/blob/main/screens/Full.png" width="300">
